@@ -15,11 +15,11 @@ export default function NosPartenairesPage() {
   const [visibleAvantages, setVisibleAvantages] = useState<number[]>([])
   const [partenaires, setPartenaires] = useState<Partner[]>([])
   
-  // Charger les partenaires depuis MySQL
+  // Charger les partenaires depuis MySQL via API
   useEffect(() => {
     const loadPartners = async () => {
-      const { getPartners } = await import('@/lib/mysql-store')
-      const loadedPartners = await getPartners()
+      const response = await fetch('/api/partners')
+      const loadedPartners = await response.json()
       
       // Si aucun partenaire dans MySQL, utiliser les données initiales
       if (loadedPartners.length === 0) {

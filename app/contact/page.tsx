@@ -35,14 +35,15 @@ export default function ContactPage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Charger les FAQs et la config depuis MySQL
+  // Charger les FAQs et la config depuis MySQL via API
   useEffect(() => {
     const loadData = async () => {
-      const { getFAQs, getAgencySettings } = await import('@/lib/mysql-store')
-      const loadedFAQs = await getFAQs()
+      const faqsResponse = await fetch('/api/faqs')
+      const loadedFAQs = await faqsResponse.json()
       setFaqs(loadedFAQs as any)
       
-      const settings = await getAgencySettings()
+      const settingsResponse = await fetch('/api/settings')
+      const settings = await settingsResponse.json()
       if (settings) {
         setAgencyConfig(settings as any)
       }

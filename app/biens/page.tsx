@@ -110,10 +110,11 @@ export default function BiensPage() {
     }
   }, [])
 
-  // Charger tous les biens depuis MySQL
+  // Charger tous les biens depuis MySQL via API
   useEffect(() => {
     const loadProperties = async () => {
-      const allProperties = await import('@/lib/mysql-store').then(m => m.getProperties())
+      const response = await fetch('/api/properties')
+      const allProperties = await response.json()
     // Mapper tous les biens
     const storeProperties = allProperties.map(p => ({
       ...p,
