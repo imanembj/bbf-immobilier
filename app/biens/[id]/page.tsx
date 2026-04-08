@@ -8,8 +8,6 @@ import { MapPin, Bed, Bath, Maximize, Wifi, Car, Utensils, Tv, Wind, Heart, Shar
 import toast from 'react-hot-toast'
 import ShareButtons from '@/components/ShareButtons'
 import { useFavorites } from '@/lib/favorites'
-import { getStore } from '@/lib/store'
-// MySQL sera utilisé en production via API routes
 import type { Review } from '@/lib/data'
 import { VisitRequestForm, ReservationForm } from '@/components/forms'
 import Modal from '@/components/Modal'
@@ -95,28 +93,31 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
   const [activeMediaTab, setActiveMediaTab] = useState<'photos' | 'video' | 'virtual'>('photos')
   const [loading, setLoading] = useState(true)
 
-  // Charger le bien depuis Supabase
+  // Charger le bien depuis l'API MySQL
   useEffect(() => {
     const loadProperty = async () => {
-      const store = getStore()
-      const prop = store.getProperty(params.id)
-    
-      if (prop) {
-        setProperty(prop)
+      try {
+        const response = await fetch(`/api/properties/${params.id}`)
+        if (response.ok) {
+          const prop = await response.json()
+          setProperty(prop)
+        }
         setLoading(false)
-      } else {
+        
+        // TODO: Charger les avis depuis l'API
+        // const reviewsResponse = await fetch(`/api/reviews?propertyId=${params.id}`)
+        // const allReviews = await reviewsResponse.json()
+        // setReviews(allReviews)
+        
+        // Calculer la note moyenne
+        // const approvedReviews = allReviews.filter((r: any) => r.status === 'approuve')
+        // if (approvedReviews.length > 0) {
+        //   const avgRating = approvedReviews.reduce((sum: number, r: any) => sum + r.rating, 0) / approvedReviews.length
+        //   setPropertyRating({ rating: avgRating, count: approvedReviews.length })
+        // }
+      } catch (error) {
+        console.error('Error loading property:', error)
         setLoading(false)
-      }
-      
-      // Charger les avis depuis Supabase
-      const allReviews = store.getReviewsByProperty(params.id)
-      setReviews(allReviews as any)
-      
-      // Calculer la note moyenne
-      const approvedReviews = allReviews.filter((r: any) => r.status === 'approuve')
-      if (approvedReviews.length > 0) {
-        const avgRating = approvedReviews.reduce((sum: number, r: any) => sum + r.rating, 0) / approvedReviews.length
-        setPropertyRating({ rating: avgRating, count: approvedReviews.length })
       }
     }
     
@@ -485,18 +486,19 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
     }
 
     try {
-      const store = getStore()
-      store.addReview({
-        id: Date.now().toString(),
-        property_id: params.id,
-        name: newReview.name,
-        email: newReview.email,
-        rating: newReview.rating,
-        comment: newReview.comment,
-        approved: false, // Les avis doivent être approuvés par l'admin
-        created_at: new Date().toISOString(),
-      } as any)
-
+      // TODO: Créer une API route pour ajouter un avis
+      // const response = await fetch('/api/reviews', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     property_id: params.id,
+      //     name: newReview.name,
+      //     email: newReview.email,
+      //     rating: newReview.rating,
+      //     comment: newReview.comment,
+      //   })
+      // })
+      
       toast.success('Merci pour votre avis ! Il sera publié après modération.')
       setShowReviewForm(false)
       setNewReview({ name: '', email: '', rating: 5, comment: '' })

@@ -6,8 +6,6 @@ import { MapPin, Bed, Bath, Maximize, Heart, Calendar } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useFavorites } from '@/lib/favorites'
 import toast from 'react-hot-toast'
-import { getStore } from '@/lib/store'
-// MySQL sera utilisé en production via API routes
 
 // Helper pour afficher le prix dans les cartes
 const getCardPriceDisplay = (property: any): { price: string, period: string } => {
@@ -80,46 +78,45 @@ export default function FeaturedProperties() {
   const { addFavorite, removeFavorite, isFavorite } = useFavorites()
   const [properties, setProperties] = useState<any[]>([])
 
-  // Charger les biens depuis le store
+  // Charger les biens depuis l'API MySQL
   useEffect(() => {
     const loadProperties = async () => {
-      const store = getStore()
-      const allProperties = store.getProperties() as any[]
-    
-    // Transformer les biens pour correspondre au format attendu
-    const transformedProperties = allProperties.map(p => {
-      // Normaliser le type pour le filtrage
-      // Les types possibles sont: 'vente', 'location', 'annuelle', 'saisonniere'
-      let normalizedType: 'vente' | 'annuelle' | 'saisonniere' = 'vente'
-      
-      if (p.type === 'vente') {
-        normalizedType = 'vente'
-      } else if (p.type === 'annuelle') {
-        normalizedType = 'annuelle'
-      } else if (p.type === 'saisonniere') {
-        normalizedType = 'saisonniere'
-      } else if (p.type === 'location') {
-        // Si c'est juste 'location', vérifier le period pour déterminer le type
-        normalizedType = p.period?.includes('mois') ? 'annuelle' : 'saisonniere'
+      try {
+        const response = await fetch('/api/properties')
+        const allProperties = await response.json()
+        
+        // Transformer les biens pour correspondre au format attendu
+        const transformedProperties = allProperties.map((p: any) => {
+          // Parser images si c'est encore une string
+          let images = p.images
+          if (typeof images === 'string') {
+            try {
+              images = JSON.parse(images)
+            } catch {
+              images = []
+            }
+          }
+          
+          return {
+            id: p.id,
+            type: p.type === 'location' ? 'annuelle' : p.type,
+            title: p.title,
+            location: p.location,
+            price: p.price,
+            period: p.period || '',
+            pricingInfo: p.pricingInfo,
+            image: images && images.length > 0 ? images[0] : '/placeholder.jpg',
+            beds: p.beds || 0,
+            baths: p.baths || 0,
+            area: p.area || 0,
+            featured: p.featured || false,
+          }
+        })
+        
+        setProperties(transformedProperties)
+      } catch (error) {
+        console.error('Error loading properties:', error)
       }
-      
-      return {
-        id: p.id,
-        type: normalizedType,
-        title: p.title,
-        location: p.location,
-        price: p.price,
-        period: normalizedType === 'annuelle' ? '/mois' : normalizedType === 'saisonniere' ? '/nuit' : '',
-        pricingInfo: p.pricingInfo, // ✅ AJOUTÉ : Garder les infos de tarification
-        image: p.images && p.images.length > 0 ? p.images[0] : '/placeholder.jpg',
-        beds: p.beds || 0,
-        baths: p.baths || 0,
-        area: p.area || 0,
-        featured: p.featured || false,
-      }
-    })
-    
-      setProperties(transformedProperties)
     }
     
     loadProperties()

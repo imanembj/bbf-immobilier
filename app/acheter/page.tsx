@@ -8,7 +8,6 @@ import { useSearchParams } from 'next/navigation'
 import { AnimatedText, AnimatedSection } from '@/components/animations'
 import { useFavorites } from '@/lib/favorites'
 import toast from 'react-hot-toast'
-import { getStore } from '@/lib/store'
 import MortgageCalculator from '@/components/MortgageCalculator'
 
 function AcheterPageContent() {
@@ -155,27 +154,39 @@ function AcheterPageContent() {
     }
   }, [isMobile])
 
-  // Charger les biens depuis le store
+  // Charger les biens depuis l'API MySQL
   useEffect(() => {
     const loadProperties = async () => {
-      const store = getStore()
-      const allProperties = store.getProperties()
-      // Filtrer uniquement les biens à vendre
-      const saleProperties = allProperties
-        .filter((p: any) => p.type === 'vente')
-        .map((p: any) => ({
-          ...p,
-          image: p.images && p.images.length > 0 ? p.images[0] : '',
-          rooms: p.rooms || p.beds || 0,
-        }))
-      
-      // Utiliser uniquement les biens Supabase
-      const combined = saleProperties
-      // Supprimer les doublons par ID
-      const unique = combined.filter((item: any, index: number, self: any[]) => 
-        index === self.findIndex((t: any) => t.id === item.id)
-      )
-      setProperties(unique)
+      try {
+        const response = await fetch('/api/properties')
+        const allProperties = await response.json()
+        
+        // Filtrer uniquement les biens à vendre
+        const saleProperties = allProperties
+          .filter((p: any) => p.type === 'vente')
+          .map((p: any) => {
+            // Parser images si c'est encore une string
+            let images = p.images
+            if (typeof images === 'string') {
+              try {
+                images = JSON.parse(images)
+              } catch {
+                images = []
+              }
+            }
+            
+            return {
+              ...p,
+              images,
+              image: images && images.length > 0 ? images[0] : '',
+              rooms: p.rooms || p.beds || 0,
+            }
+          })
+        
+        setProperties(saleProperties)
+      } catch (error) {
+        console.error('Error loading properties:', error)
+      }
     }
     
     loadProperties()

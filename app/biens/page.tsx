@@ -7,7 +7,6 @@ import { MapPin, Bed, Bath, Maximize, Heart, Search, SlidersHorizontal } from 'l
 import { AnimatedText } from '@/components/animations'
 import { useFavorites } from '@/lib/favorites'
 import toast from 'react-hot-toast'
-import { getStore } from '@/lib/store'
 
 // Helper pour afficher le prix dans les cartes
 const getCardPriceDisplay = (property: any): { price: string, period: string } => {
@@ -113,38 +112,46 @@ export default function BiensPage() {
   // Charger tous les biens depuis MySQL via API
   useEffect(() => {
     const loadProperties = async () => {
-      const response = await fetch('/api/properties')
-      const allProperties = await response.json()
-      
-      console.log('Properties loaded:', allProperties.length)
-      
-    // Mapper tous les biens
-    const storeProperties = allProperties.map((p: any) => {
-      // Parser images si c'est encore une string
-      let images = p.images
-      if (typeof images === 'string') {
-        try {
-          images = JSON.parse(images)
-        } catch {
-          images = []
+      try {
+        const response = await fetch('/api/properties')
+        if (!response.ok) {
+          console.error('Failed to fetch properties:', response.status)
+          return
         }
+        
+        const allProperties = await response.json()
+        console.log('Properties loaded:', allProperties.length)
+        
+        // Mapper tous les biens
+        const storeProperties = allProperties.map((p: any) => {
+          // Parser images si c'est encore une string
+          let images = p.images
+          if (typeof images === 'string') {
+            try {
+              images = JSON.parse(images)
+            } catch {
+              images = []
+            }
+          }
+          
+          return {
+            ...p,
+            images,
+            image: images && images.length > 0 ? images[0] : '',
+            type: p.type === 'location' ? 'annuelle' : p.type,
+            rooms: p.rooms || p.beds || 0,
+          }
+        })
+        
+        // Utiliser uniquement les biens MySQL
+        const combined = storeProperties
+        const unique = combined.filter((item: any, index: number, self: any[]) => 
+          index === self.findIndex((t: any) => t.id === item.id)
+        )
+        setProperties(unique)
+      } catch (error) {
+        console.error('Error loading properties:', error)
       }
-      
-      return {
-        ...p,
-        images,
-        image: images && images.length > 0 ? images[0] : '',
-        type: p.type === 'location' ? 'annuelle' : p.type,
-        rooms: p.rooms || p.beds || 0,
-      }
-    })
-    
-      // Utiliser uniquement les biens MySQL
-      const combined = storeProperties
-      const unique = combined.filter((item: any, index: number, self: any[]) => 
-        index === self.findIndex((t: any) => t.id === item.id)
-      )
-      setProperties(unique)
     }
     
     loadProperties()
