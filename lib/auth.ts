@@ -1,9 +1,9 @@
 /**
  * Système d'authentification pour l'admin
- * Utilise Supabase pour stocker les utilisateurs de manière sécurisée
+ * Utilise MySQL pour stocker les utilisateurs de manière sécurisée
  */
 
-import { supabase } from './supabase'
+import { queryOne } from './db'
 
 export interface AdminUser {
   id: string
@@ -42,17 +42,15 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
     console.log('🔐 Tentative de connexion pour:', email)
     
     // Récupérer l'utilisateur par email
-    const { data, error } = await supabase
-      .from('admin_users')
-      .select('*')
-      .eq('email', email)
-      .eq('active', true)
-      .single()
+    const data = await queryOne<any>(
+      'SELECT * FROM admin_users WHERE email = ? AND active = true',
+      [email]
+    )
 
-    console.log('📊 Résultat Supabase:', { data, error })
+    console.log('📊 Résultat MySQL:', { data })
 
-    if (error || !data) {
-      console.log('❌ Utilisateur non trouvé ou erreur:', error)
+    if (!data) {
+      console.log('❌ Utilisateur non trouvé')
       return { success: false, error: 'Email ou mot de passe incorrect' }
     }
 
@@ -69,10 +67,10 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
     console.log('✅ Connexion réussie!')
 
     // Mettre à jour la date de dernière connexion
-    await supabase
-      .from('admin_users')
-      .update({ last_login: new Date().toISOString() })
-      .eq('id', data.id)
+    await queryOne(
+      'UPDATE admin_users SET last_login = ? WHERE id = ?',
+      [new Date().toISOString(), data.id]
+    )
 
     // Convertir en camelCase
     const user: AdminUser = {
@@ -99,13 +97,12 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
 export async function changePassword(userId: string, currentPassword: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
   try {
     // Récupérer l'utilisateur
-    const { data, error } = await supabase
-      .from('admin_users')
-      .select('password_hash')
-      .eq('id', userId)
-      .single()
+    const data = await queryOne<any>(
+      'SELECT password_hash FROM admin_users WHERE id = ?',
+      [userId]
+    )
 
-    if (error || !data) {
+    if (!data) {
       return { success: false, error: 'Utilisateur non trouvé' }
     }
 
@@ -115,14 +112,10 @@ export async function changePassword(userId: string, currentPassword: string, ne
     }
 
     // Mettre à jour avec le nouveau mot de passe
-    const { error: updateError } = await supabase
-      .from('admin_users')
-      .update({ password_hash: simpleHash(newPassword) })
-      .eq('id', userId)
-
-    if (updateError) {
-      return { success: false, error: 'Erreur lors de la mise à jour' }
-    }
+    await queryOne(
+      'UPDATE admin_users SET password_hash = ? WHERE id = ?',
+      [simpleHash(newPassword), userId]
+    )
 
     return { success: true }
   } catch (error) {
@@ -137,25 +130,20 @@ export async function changePassword(userId: string, currentPassword: string, ne
 export async function changeEmail(userId: string, newEmail: string): Promise<{ success: boolean; error?: string }> {
   try {
     // Vérifier que l'email n'est pas déjà utilisé
-    const { data: existing } = await supabase
-      .from('admin_users')
-      .select('id')
-      .eq('email', newEmail)
-      .single()
+    const existing = await queryOne<any>(
+      'SELECT id FROM admin_users WHERE email = ?',
+      [newEmail]
+    )
 
     if (existing && existing.id !== userId) {
       return { success: false, error: 'Cet email est déjà utilisé' }
     }
 
     // Mettre à jour l'email
-    const { error } = await supabase
-      .from('admin_users')
-      .update({ email: newEmail })
-      .eq('id', userId)
-
-    if (error) {
-      return { success: false, error: 'Erreur lors de la mise à jour' }
-    }
+    await queryOne(
+      'UPDATE admin_users SET email = ? WHERE id = ?',
+      [newEmail, userId]
+    )
 
     return { success: true }
   } catch (error) {
@@ -169,19 +157,18 @@ export async function changeEmail(userId: string, newEmail: string): Promise<{ s
  */
 export async function createAdminUser(email: string, password: string, name?: string): Promise<{ success: boolean; user?: AdminUser; error?: string }> {
   try {
-    const { data, error } = await supabase
-      .from('admin_users')
-      .insert([{
-        email,
-        password_hash: simpleHash(password),
-        name,
-        role: 'admin',
-        active: true,
-      }])
-      .select()
-      .single()
+    const id = Date.now().toString()
+    await queryOne(
+      'INSERT INTO admin_users (id, email, password_hash, name, role, active) VALUES (?, ?, ?, ?, ?, ?)',
+      [id, email, simpleHash(password), name || '', 'admin', true]
+    )
 
-    if (error) {
+    const data = await queryOne<any>(
+      'SELECT * FROM admin_users WHERE id = ?',
+      [id]
+    )
+
+    if (!data) {
       return { success: false, error: 'Erreur lors de la création de l\'utilisateur' }
     }
 

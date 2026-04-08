@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { formatContactEmail, getDestinationEmail } from '@/lib/email-config'
-import { supabase } from '@/lib/supabase'
+import { saveMessage } from '@/lib/supabase-helpers'
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,13 +27,11 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString(),
     }
     
-    // Sauvegarder dans Supabase
-    const { error: dbError } = await supabase
-      .from('messages')
-      .insert([newMessage])
-    
-    if (dbError) {
-      console.error('Erreur Supabase:', dbError)
+    // Sauvegarder dans MySQL
+    try {
+      await saveMessage(newMessage)
+    } catch (dbError) {
+      console.error('Erreur MySQL:', dbError)
     }
 
     // Préparer l'email
