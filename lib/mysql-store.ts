@@ -23,13 +23,18 @@ function convertToCamelCase(obj: any): any {
   }
   
   // Parser les JSON fields
-  if (obj.amenities && typeof obj.amenities === 'string') {
-    try {
-      converted.amenities = JSON.parse(obj.amenities)
-    } catch {
-      converted.amenities = obj.amenities
+  const jsonFields = ['images', 'amenities', 'features', 'rules', 'detailed_description', 'environment', 
+                      'rental_conditions', 'purchase_conditions', 'fees', 'legal_info', 'pricing_info', 'tags', 'links']
+  
+  jsonFields.forEach(field => {
+    if (obj[field] && typeof obj[field] === 'string') {
+      try {
+        converted[field] = JSON.parse(obj[field])
+      } catch {
+        converted[field] = obj[field]
+      }
     }
-  }
+  })
   
   if (obj.property_id !== undefined) converted.propertyId = obj.property_id
   if (obj.property_title !== undefined) converted.propertyTitle = obj.property_title
