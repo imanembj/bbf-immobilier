@@ -1,0 +1,80 @@
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: '#e6f9ff',
+          100: '#ccf3ff',
+          200: '#99e7ff',
+          300: '#66dbff',
+          400: '#55e0ff',
+          500: '#55e0ff',
+          600: '#44b3cc',
+          700: '#338699',
+          800: '#225966',
+          900: '#112c33',
+        },
+        cyan: {
+          50: '#e6f9ff',
+          100: '#ccf3ff',
+          200: '#99e7ff',
+          300: '#66dbff',
+          400: '#55e0ff',
+          500: '#55e0ff',
+          600: '#44b3cc',
+          700: '#338699',
+          800: '#225966',
+          900: '#112c33',
+        },
+        teal: {
+          50: '#e6f9ff',
+          100: '#ccf3ff',
+          200: '#99e7ff',
+          300: '#66dbff',
+          400: '#55e0ff',
+          500: '#55e0ff',
+          600: '#44b3cc',
+          700: '#338699',
+          800: '#225966',
+          900: '#112c33',
+        },
+        tropical: {
+          50: '#e8f5e9',
+          100: '#c8e6c9',
+          200: '#a5d6a7',
+          300: '#81c784',
+          400: '#66bb6a',
+          500: '#4caf50',
+          600: '#43a047',
+          700: '#388e3c',
+          800: '#2e7d32',
+          900: '#1b5e20',
+        },
+        gold: {
+          50: '#fff8e1',
+          100: '#ffecb3',
+          200: '#ffe082',
+          300: '#ffd54f',
+          400: '#ffca28',
+          500: '#ffc107',
+          600: '#ffb300',
+          700: '#ffa000',
+          800: '#ff8f00',
+          900: '#ff6f00',
+        },
+      },
+      fontFamily: {
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+}
+export default config

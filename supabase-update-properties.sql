@@ -1,0 +1,15 @@
+-- Ajouter les colonnes manquantes à la table properties
+
+ALTER TABLE properties 
+ADD COLUMN IF NOT EXISTS rooms INTEGER,
+ADD COLUMN IF NOT EXISTS video_url TEXT,
+ADD COLUMN IF NOT EXISTS virtual_tour_url TEXT,
+ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'disponible',
+ADD COLUMN IF NOT EXISTS featured BOOLEAN DEFAULT false,
+ADD COLUMN IF NOT EXISTS detailed_description JSONB,
+ADD COLUMN IF NOT EXISTS environment JSONB,
+ADD COLUMN IF NOT EXISTS rules TEXT[],
+ADD COLUMN IF NOT EXISTS rental_conditions JSONB,
+ADD COLUMN IF NOT EXISTS purchase_conditions JSONB,
+ADD COLUMN IF NOT EXISTS fees JSONB,
+ADD COLUMN IF NOT EXISTS legal_info JSONB;

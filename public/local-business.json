@@ -1,0 +1,137 @@
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://bbf-immobilier.com",
+  "name": "BBF Immobilier - Bulle Immobilière Business & Foncier",
+  "alternateName": ["BBF Immobilier", "Bulle Immobilière", "BBF"],
+  "description": "Agence immobilière n°1 en Martinique (972). Vente, location annuelle et saisonnière de villas, appartements, maisons. Expert en gestion locative, business et foncier.",
+  "url": "https://bbf-immobilier.com",
+  "telephone": "+596696XXXXXX",
+  "email": "contact@bbf-immobilier.com",
+  "priceRange": "€€",
+  "image": "https://bbf-immobilier.com/og-image.jpg",
+  "logo": "https://bbf-immobilier.com/logo.png",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Rivière-Pilote",
+    "addressLocality": "Rivière-Pilote",
+    "addressRegion": "Martinique",
+    "postalCode": "97211",
+    "addressCountry": "MQ"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "14.4667",
+    "longitude": "-60.9000"
+  },
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Rivière-Pilote"
+    },
+    {
+      "@type": "City",
+      "name": "Fort-de-France"
+    },
+    {
+      "@type": "City",
+      "name": "Le Marin"
+    },
+    {
+      "@type": "City",
+      "name": "Sainte-Anne"
+    },
+    {
+      "@type": "City",
+      "name": "Les Trois-Îlets"
+    },
+    {
+      "@type": "City",
+      "name": "Le Diamant"
+    },
+    {
+      "@type": "City",
+      "name": "Le François"
+    },
+    {
+      "@type": "City",
+      "name": "Schoelcher"
+    },
+    {
+      "@type": "State",
+      "name": "Martinique"
+    }
+  ],
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Saturday",
+      "opens": "09:00",
+      "closes": "13:00"
+    }
+  ],
+  "sameAs": [
+    "https://www.facebook.com/bbfimmobilier",
+    "https://www.instagram.com/bbfimmobilier",
+    "https://www.tiktok.com/@bbfimmobilier"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Services Immobiliers",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Vente de biens immobiliers",
+          "description": "Vente de villas, appartements, maisons et terrains en Martinique"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Location annuelle",
+          "description": "Location longue durée de biens immobiliers en Martinique"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Location saisonnière",
+          "description": "Location de vacances en Martinique"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Gestion locative",
+          "description": "Gestion complète de vos biens locatifs en Martinique"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Business & Foncier",
+          "description": "Conseil en investissement immobilier et foncier"
+        }
+      }
+    ]
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "127",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+}

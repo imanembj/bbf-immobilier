@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Storage - Bulle Immobilière</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #41A09C;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #357f7b;
+        }
+        .danger {
+            background: #dc3545;
+        }
+        .danger:hover {
+            background: #c82333;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 400px;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Réinitialisation du Storage - Bulle Immobilière</h1>
+        
+        <h2>État actuel du localStorage :</h2>
+        <div id="current-storage"></div>
+        
+        <h2>Actions :</h2>
+        <button onclick="viewPartners()">📋 Voir les partenaires</button>
+        <button onclick="resetPartners()">🔄 Réinitialiser les partenaires</button>
+        <button onclick="resetAll()" class="danger">⚠️ Tout réinitialiser</button>
+        
+        <div id="result" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        const initialPartners = [
+            {
+                id: '1',
+                nom: 'Notaires de Martinique',
+                categorie: 'Juridique',
+                description: 'Chambre interdépartementale des notaires Guyane-Martinique',
+                logo: '⚖️',
+                url: 'https://chambre-interdep-guyane-martinique.notaires.fr',
+                ordre: 1,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+            {
+                id: '2',
+                nom: 'King Location',
+                categorie: 'Mobilité',
+                description: '-12% avec le code BBF sur votre location de voiture',
+                logo: '🚗',
+                url: 'https://www.kingslocation.fr',
+                promo: 'Code: BBF',
+                ordre: 2,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+            {
+                id: '3',
+                nom: 'L\'île aux Iguanes',
+                categorie: 'Loisirs',
+                description: 'Découvrez les merveilles de la Martinique',
+                logo: '🦎',
+                url: '#',
+                ordre: 3,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+            {
+                id: '4',
+                nom: 'Massages & Bien-être',
+                categorie: 'Détente',
+                description: 'Services de massage et relaxation',
+                logo: '💆',
+                url: '#',
+                ordre: 4,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+            {
+                id: '5',
+                nom: 'Banques partenaires',
+                categorie: 'Financement',
+                description: 'Réseau de banques pour vos projets immobiliers',
+                logo: '🏦',
+                url: '#',
+                ordre: 5,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+            {
+                id: '6',
+                nom: 'Artisans certifiés',
+                categorie: 'Travaux',
+                description: 'Professionnels qualifiés pour vos rénovations',
+                logo: '🔨',
+                url: '#',
+                ordre: 6,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+            {
+                id: '7',
+                nom: 'Assurances',
+                categorie: 'Protection',
+                description: 'Solutions d\'assurance habitation et emprunteur',
+                logo: '🛡️',
+                url: '#',
+                ordre: 7,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+            {
+                id: '8',
+                nom: 'Poissons frais',
+                categorie: 'Expérience Mystique',
+                description: 'Pêche locale livrée à la villa, nettoyage et préparation inclus',
+                logo: '🐟',
+                url: '#',
+                prix: 'À partir de 15 €',
+                ordre: 8,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+            {
+                id: '9',
+                nom: 'Courses à l\'arrivée',
+                categorie: 'Expérience Mystique',
+                description: 'Livraison personnalisée de produits frais et essentiels',
+                logo: '🛒',
+                url: '#',
+                prix: 'Service : 25 €',
+                ordre: 9,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+            {
+                id: '10',
+                nom: 'Repas & Douceurs',
+                categorie: 'Expérience Mystique',
+                description: 'Chef privé, menus créoles, gâteaux événementiels',
+                logo: '🍽️',
+                url: '#',
+                prix: 'Dès 25 €/pers',
+                ordre: 10,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+            {
+                id: '11',
+                nom: 'Balades en mer',
+                categorie: 'Expérience Mystique',
+                description: 'Sorties bateau, apéro sunset, îlets, snorkeling, dauphins',
+                logo: '⛵',
+                url: '#',
+                prix: 'Dès 60 €/pers',
+                ordre: 11,
+                actif: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+        ];
+
+        function displayCurrentStorage() {
+            const storage = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                try {
+                    storage[key] = JSON.parse(value);
+                } catch {
+                    storage[key] = value;
+                }
+            }
+            
+            document.getElementById('current-storage').innerHTML = 
+                '<pre>' + JSON.stringify(storage, null, 2) + '</pre>';
+        }
+
+        function viewPartners() {
+            const partners = localStorage.getItem('partners');
+            const result = document.getElementById('result');
+            
+            if (!partners) {
+                result.innerHTML = '<p class="error">❌ Aucun partenaire trouvé dans le localStorage</p>';
+            } else {
+                try {
+                    const parsed = JSON.parse(partners);
+                    result.innerHTML = 
+                        '<h3 class="success">✅ Partenaires trouvés : ' + parsed.length + '</h3>' +
+                        '<pre>' + JSON.stringify(parsed, null, 2) + '</pre>';
+                } catch (e) {
+                    result.innerHTML = '<p class="error">❌ Erreur de parsing : ' + e.message + '</p>';
+                }
+            }
+        }
+
+        function resetPartners() {
+            localStorage.setItem('partners', JSON.stringify(initialPartners));
+            const result = document.getElementById('result');
+            result.innerHTML = '<p class="success">✅ Partenaires réinitialisés avec succès ! (' + initialPartners.length + ' partenaires)</p>';
+            displayCurrentStorage();
+            
+            setTimeout(() => {
+                if (confirm('Voulez-vous recharger la page pour voir les changements ?')) {
+                    window.location.href = '/nos-partenaires';
+                }
+            }, 1000);
+        }
+
+        function resetAll() {
+            if (confirm('⚠️ ATTENTION : Cela va supprimer TOUTES les données (biens, réservations, messages, etc.). Êtes-vous sûr ?')) {
+                localStorage.clear();
+                localStorage.setItem('partners', JSON.stringify(initialPartners));
+                
+                const result = document.getElementById('result');
+                result.innerHTML = '<p class="success">✅ Tout a été réinitialisé !</p>';
+                displayCurrentStorage();
+                
+                setTimeout(() => {
+                    if (confirm('Voulez-vous recharger la page ?')) {
+                        window.location.reload();
+                    }
+                }, 1000);
+            }
+        }
+
+        // Afficher l'état au chargement
+        displayCurrentStorage();
+    </script>
+</body>
+</html>
