@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Lock, Mail, Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { loginAdmin, saveSession } from '@/lib/auth'
+import { saveSession } from '@/lib/auth-session'
 
 export default function AdminLogin() {
   const router = useRouter()
@@ -18,8 +18,14 @@ export default function AdminLogin() {
     setLoading(true)
 
     try {
-      // Connexion via Supabase
-      const result = await loginAdmin(email, password)
+      // Connexion via API
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      
+      const result = await response.json()
 
       if (result.success && result.user) {
         // Sauvegarder la session

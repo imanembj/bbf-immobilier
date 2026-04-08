@@ -39,7 +39,7 @@ import { Property, Booking, Message, Review, Partner, FAQ, ClientRequest, BlogPo
 import toast from 'react-hot-toast'
 import PropertyForm from '@/components/admin/PropertyForm'
 import BlogPostForm from '@/components/admin/BlogPostForm'
-import { getSession, clearSession, saveSession, changePassword as authChangePassword, changeEmail as authChangeEmail } from '@/lib/auth'
+import { getSession, clearSession, saveSession } from '@/lib/auth-session'
 import { PropertyFormData } from '@/lib/property-types'
 import StorageMonitor from '@/components/admin/StorageMonitor'
 import { getAgencyConfig, saveAgencyConfig, AgencyConfig } from '@/lib/agency-config'
