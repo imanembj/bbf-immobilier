@@ -116,7 +116,7 @@ export default function BiensPage() {
       const response = await fetch('/api/properties')
       const allProperties = await response.json()
     // Mapper tous les biens
-    const storeProperties = allProperties.map(p => ({
+    const storeProperties = allProperties.map((p: any) => ({
       ...p,
       image: p.images && p.images.length > 0 ? p.images[0] : '',
       type: p.type === 'location' ? 'annuelle' : p.type,
