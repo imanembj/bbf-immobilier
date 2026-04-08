@@ -115,13 +115,29 @@ export default function BiensPage() {
     const loadProperties = async () => {
       const response = await fetch('/api/properties')
       const allProperties = await response.json()
+      
+      console.log('Properties loaded:', allProperties.length)
+      
     // Mapper tous les biens
-    const storeProperties = allProperties.map((p: any) => ({
-      ...p,
-      image: p.images && p.images.length > 0 ? p.images[0] : '',
-      type: p.type === 'location' ? 'annuelle' : p.type,
-      rooms: p.rooms || p.beds || 0,
-    }))
+    const storeProperties = allProperties.map((p: any) => {
+      // Parser images si c'est encore une string
+      let images = p.images
+      if (typeof images === 'string') {
+        try {
+          images = JSON.parse(images)
+        } catch {
+          images = []
+        }
+      }
+      
+      return {
+        ...p,
+        images,
+        image: images && images.length > 0 ? images[0] : '',
+        type: p.type === 'location' ? 'annuelle' : p.type,
+        rooms: p.rooms || p.beds || 0,
+      }
+    })
     
       // Utiliser uniquement les biens MySQL
       const combined = storeProperties
