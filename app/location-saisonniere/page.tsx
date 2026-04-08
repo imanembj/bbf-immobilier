@@ -8,7 +8,7 @@ import { AnimatedText, AnimatedSection } from '@/components/animations'
 import { useFavorites } from '@/lib/favorites'
 import toast from 'react-hot-toast'
 import { getStore } from '@/lib/store'
-import * as SupabaseStore from '@/lib/supabase-store'
+// MySQL sera utilisé en production via API routes
 
 // Helper pour afficher le prix dans les cartes
 const getCardPriceDisplay = (property: any): { price: string, period: string } => {
@@ -145,7 +145,8 @@ export default function LocationSaisonnierePage() {
   // Charger les biens depuis Supabase
   useEffect(() => {
     const loadProperties = async () => {
-      const allProperties = await SupabaseStore.getProperties()
+      const store = getStore()
+      const allProperties = store.getProperties()
       // Filtrer uniquement les locations saisonnières
       const seasonalProperties = allProperties
       .filter(p => p.type === 'saisonniere')

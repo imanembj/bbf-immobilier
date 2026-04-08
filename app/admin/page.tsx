@@ -34,7 +34,7 @@ import {
   Pin
 } from 'lucide-react'
 import { getStore } from '@/lib/store'
-import * as SupabaseStore from '@/lib/supabase-store'
+// MySQL sera utilisé en production via API routes
 import { Property, Booking, Message, Review, Partner, FAQ, ClientRequest, BlogPost } from '@/lib/data'
 import toast from 'react-hot-toast'
 import PropertyForm from '@/components/admin/PropertyForm'
@@ -151,24 +151,18 @@ export default function AdminDashboard() {
   }, [])
 
   const loadData = async () => {
-    // Charger depuis Supabase (avec brouillons pour l'admin)
-    const [props, msgs, revs, parts, faqs, reqs, blogs] = await Promise.all([
-      SupabaseStore.getAllProperties(), // ✅ Afficher TOUS les biens (y compris brouillons)
-      SupabaseStore.getMessages(),
-      SupabaseStore.getAllReviews(),
-      SupabaseStore.getAllPartners(),
-      SupabaseStore.getAllFAQs(),
-      SupabaseStore.getClientRequests(),
-      SupabaseStore.getAllBlogPosts()
-    ])
+    // Charger depuis le store (localStorage en local, MySQL en production)
+    const store = getStore()
+    const props = store.getProperties() // Tous les biens
+    const msgs = store.getMessages()
+    const revs = store.getReviews()
+    const parts = store.getPartners()
+    const faqs = store.getFAQs()
+    const reqs = store.getClientRequests()
+    const blogs = store.getBlogPosts()
     
-    // Charger les settings (peut échouer si la table n'existe pas encore)
-    let settings = null
-    try {
-      settings = await SupabaseStore.getAgencySettings()
-    } catch (error) {
-      console.log('Settings table not yet created')
-    }
+    // Settings chargés depuis agency-config
+    const settings = getAgencyConfig()
     
     setProperties(props as any)
     setMessages(msgs as any)
@@ -178,13 +172,12 @@ export default function AdminDashboard() {
     setClientRequests(reqs as any)
     setBlogPosts(blogs as any)
     
-    // Charger les settings depuis Supabase
+    // Charger les settings
     if (settings) {
       setAgencyConfig(settings as any)
     }
     
-    // Bookings reste en localStorage pour l'instant
-    const store = getStore()
+    // Bookings
     setBookings(store.getBookings())
     
     // Calculer les stats
@@ -201,7 +194,8 @@ export default function AdminDashboard() {
   const handleDeleteProperty = async (id: string) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce bien ?')) {
       try {
-        await SupabaseStore.deleteProperty(id)
+        const store = getStore()
+        store.deleteProperty(id)
         await loadData()
         toast.success('Bien supprimé avec succès')
       } catch (error) {
@@ -219,7 +213,8 @@ export default function AdminDashboard() {
 
   const handleMarkMessageAsRead = async (id: string) => {
     try {
-      await SupabaseStore.updateMessage(id, { status: 'lu' })
+      const store = getStore()
+      store.updateMessage(id, { status: 'lu' })
       await loadData()
     } catch (error) {
       toast.error('Erreur lors de la mise à jour')

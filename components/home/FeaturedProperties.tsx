@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import { useFavorites } from '@/lib/favorites'
 import toast from 'react-hot-toast'
 import { getStore } from '@/lib/store'
-import * as SupabaseStore from '@/lib/supabase-store'
+// MySQL sera utilisé en production via API routes
 
 // Helper pour afficher le prix dans les cartes
 const getCardPriceDisplay = (property: any): { price: string, period: string } => {
@@ -80,10 +80,11 @@ export default function FeaturedProperties() {
   const { addFavorite, removeFavorite, isFavorite } = useFavorites()
   const [properties, setProperties] = useState<any[]>([])
 
-  // Charger les biens depuis Supabase
+  // Charger les biens depuis le store
   useEffect(() => {
     const loadProperties = async () => {
-      const allProperties = await SupabaseStore.getProperties() as any[]
+      const store = getStore()
+      const allProperties = store.getProperties() as any[]
     
     // Transformer les biens pour correspondre au format attendu
     const transformedProperties = allProperties.map(p => {

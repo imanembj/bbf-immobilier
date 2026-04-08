@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Calendar, User, Eye, Tag, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Link as LinkIcon } from 'lucide-react'
-import * as SupabaseStore from '@/lib/supabase-store'
+import { getStore } from '@/lib/store'
 import { BlogPost } from '@/lib/data'
 import toast from 'react-hot-toast'
 
@@ -19,19 +19,20 @@ export default function BlogPostPage() {
   useEffect(() => {
     const loadPost = async () => {
       const slug = params.slug as string
-      const foundPost = await SupabaseStore.getBlogPostBySlug(slug)
+      const store = getStore()
+      const fetchedPost = store.getBlogPostBySlug(slug)
 
-      if (!foundPost) {
+      if (!fetchedPost) {
         router.push('/blog')
         return
       }
 
-      setPost(foundPost as any)
+      setPost(fetchedPost as any)
 
       // Articles similaires (même catégorie)
-      const allPosts = await SupabaseStore.getBlogPosts()
+      const allPosts = store.getBlogPosts()
       const related = allPosts
-        .filter((p: any) => p.id !== foundPost.id && p.category === foundPost.category)
+        .filter((p: any) => p.id !== fetchedPost.id && p.category === fetchedPost.category)
         .slice(0, 3)
       setRelatedPosts(related as any)
       setLoading(false)

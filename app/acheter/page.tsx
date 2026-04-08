@@ -9,7 +9,6 @@ import { AnimatedText, AnimatedSection } from '@/components/animations'
 import { useFavorites } from '@/lib/favorites'
 import toast from 'react-hot-toast'
 import { getStore } from '@/lib/store'
-import * as SupabaseStore from '@/lib/supabase-store'
 import MortgageCalculator from '@/components/MortgageCalculator'
 
 function AcheterPageContent() {
@@ -156,10 +155,11 @@ function AcheterPageContent() {
     }
   }, [isMobile])
 
-  // Charger les biens depuis Supabase
+  // Charger les biens depuis le store
   useEffect(() => {
     const loadProperties = async () => {
-      const allProperties = await SupabaseStore.getProperties()
+      const store = getStore()
+      const allProperties = store.getProperties()
       // Filtrer uniquement les biens à vendre
       const saleProperties = allProperties
         .filter((p: any) => p.type === 'vente')

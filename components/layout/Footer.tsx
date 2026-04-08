@@ -4,34 +4,14 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Building2, Mail, Phone, MapPin, Facebook, Instagram, Music, Youtube, Clock } from 'lucide-react'
 import { getAgencyConfig, AgencyConfig } from '@/lib/agency-config'
-import * as SupabaseStore from '@/lib/supabase-store'
+// Utilise getAgencyConfig en local
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
   const [agencyConfig, setAgencyConfig] = useState<AgencyConfig>(getAgencyConfig())
 
-  // Charger la config depuis Supabase
-  useEffect(() => {
-    const loadConfig = async () => {
-      const settings = await SupabaseStore.getAgencySettings()
-      if (settings) {
-        setAgencyConfig(settings as any)
-      }
-    }
-    
-    loadConfig()
-
-    // Écouter les changements de configuration
-    const handleConfigUpdate = () => {
-      loadConfig()
-    }
-
-    window.addEventListener('agency-config-updated', handleConfigUpdate)
-
-    return () => {
-      window.removeEventListener('agency-config-updated', handleConfigUpdate)
-    }
-  }, [])
+  // En local, on utilise getAgencyConfig()
+  // En production, MySQL sera utilisé via API routes
 
   const footerLinks = {
     services: [

@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import ShareButtons from '@/components/ShareButtons'
 import { useFavorites } from '@/lib/favorites'
 import { getStore } from '@/lib/store'
-import * as SupabaseStore from '@/lib/supabase-store'
+// MySQL sera utilisé en production via API routes
 import type { Review } from '@/lib/data'
 import { VisitRequestForm, ReservationForm } from '@/components/forms'
 import Modal from '@/components/Modal'
@@ -98,21 +98,22 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
   // Charger le bien depuis Supabase
   useEffect(() => {
     const loadProperty = async () => {
-      const loadedProperty = await SupabaseStore.getProperty(params.id)
+      const store = getStore()
+      const prop = store.getProperty(params.id)
     
-      if (loadedProperty) {
-        setProperty(loadedProperty)
+      if (prop) {
+        setProperty(prop)
         setLoading(false)
       } else {
         setLoading(false)
       }
       
       // Charger les avis depuis Supabase
-      const propertyReviews = await SupabaseStore.getReviewsByProperty(params.id)
-      setReviews(propertyReviews as any)
+      const allReviews = store.getReviewsByProperty(params.id)
+      setReviews(allReviews as any)
       
       // Calculer la note moyenne
-      const approvedReviews = propertyReviews.filter((r: any) => r.status === 'approuve')
+      const approvedReviews = allReviews.filter((r: any) => r.status === 'approuve')
       if (approvedReviews.length > 0) {
         const avgRating = approvedReviews.reduce((sum: number, r: any) => sum + r.rating, 0) / approvedReviews.length
         setPropertyRating({ rating: avgRating, count: approvedReviews.length })
@@ -366,7 +367,7 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
             '🚌 Arrêt bus à 3 min',
             '🛒 Centre commercial à 10 min',
             '🏥 Pharmacie à 5 min',
-            '⚽ Stade municipal à 8 min',
+            '⚽ Golf de Nice à 8 min',
             '🏖️ Plage à 15 min',
             '🏪 Boulangerie à 2 min',
           ],
@@ -484,7 +485,8 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
     }
 
     try {
-      await SupabaseStore.addReview({
+      const store = getStore()
+      store.addReview({
         id: Date.now().toString(),
         property_id: params.id,
         name: newReview.name,

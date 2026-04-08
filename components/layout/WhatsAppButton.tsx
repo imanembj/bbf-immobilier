@@ -1,25 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import * as SupabaseStore from '@/lib/supabase-store'
+// Utilise le numéro par défaut en local
 
 export default function WhatsAppButton() {
   const [phoneNumber, setPhoneNumber] = useState('596696007420') // +596 696 00 74 20 (format international sans +)
   const message = encodeURIComponent('Bonjour, je suis intéressé(e) par vos services immobiliers.')
   
-  // Charger le numéro depuis Supabase
-  useEffect(() => {
-    const loadPhone = async () => {
-      const settings = await SupabaseStore.getAgencySettings()
-      if (settings && settings.phone) {
-        // Convertir +596 696 00 74 20 en 596696007420
-        const cleanPhone = settings.phone.replace(/[\s+]/g, '')
-        setPhoneNumber(cleanPhone)
-      }
-    }
-    
-    loadPhone()
-  }, [])
+  // En local, utilise le numéro par défaut
+  // En production, MySQL sera utilisé via API routes
   
   const handleClick = () => {
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank')

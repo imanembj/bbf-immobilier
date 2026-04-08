@@ -35,10 +35,10 @@ export default function ContactPage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Charger les FAQs et la config depuis Supabase
+  // Charger les FAQs et la config depuis MySQL
   useEffect(() => {
     const loadData = async () => {
-      const { getFAQs, getAgencySettings } = await import('@/lib/supabase-store')
+      const { getFAQs, getAgencySettings } = await import('@/lib/mysql-store')
       const loadedFAQs = await getFAQs()
       setFaqs(loadedFAQs as any)
       

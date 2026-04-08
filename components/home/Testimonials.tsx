@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Star, Quote } from 'lucide-react'
-import * as SupabaseStore from '@/lib/supabase-store'
+import { getStore } from '@/lib/store'
 import type { Review } from '@/lib/data'
 
 export default function Testimonials() {
@@ -13,7 +13,8 @@ export default function Testimonials() {
   useEffect(() => {
     const loadReviews = async () => {
       try {
-        const allReviews = await SupabaseStore.getReviews()
+        const store = getStore()
+        const allReviews = store.getReviews()
         // Prendre les 8 meilleurs avis (rating >= 4)
         const topReviews = allReviews
           .filter(review => review.rating >= 4)

@@ -40,7 +40,7 @@ export function getAgencyConfig(): AgencyConfig {
   }
   
   // Sinon retourner la config par défaut
-  // (Supabase sera chargé de manière asynchrone dans les composants)
+  // (MySQL sera chargé de manière asynchrone dans les composants)
   return defaultConfig
 }
 
@@ -70,10 +70,10 @@ export function useAgencyConfig() {
 // Import React pour le hook
 import React from 'react'
 
-// Fonction async pour charger depuis Supabase
-export async function getAgencyConfigFromSupabase(): Promise<AgencyConfig> {
+// Fonction async pour charger depuis MySQL
+export async function getAgencyConfigFromMySQL(): Promise<AgencyConfig> {
   try {
-    const { getAgencySettings } = await import('./supabase-store')
+    const { getAgencySettings } = await import('./mysql-store')
     const settings = await getAgencySettings()
     return settings || defaultConfig
   } catch {

@@ -15,13 +15,13 @@ export default function NosPartenairesPage() {
   const [visibleAvantages, setVisibleAvantages] = useState<number[]>([])
   const [partenaires, setPartenaires] = useState<Partner[]>([])
   
-  // Charger les partenaires depuis Supabase
+  // Charger les partenaires depuis MySQL
   useEffect(() => {
     const loadPartners = async () => {
-      const { getPartners } = await import('@/lib/supabase-store')
+      const { getPartners } = await import('@/lib/mysql-store')
       const loadedPartners = await getPartners()
       
-      // Si aucun partenaire dans Supabase, utiliser les données initiales
+      // Si aucun partenaire dans MySQL, utiliser les données initiales
       if (loadedPartners.length === 0) {
         setPartenaires(initialPartners.filter(p => p.actif).sort((a, b) => a.ordre - b.ordre))
       } else {

@@ -4,21 +4,13 @@ import { useState, useEffect } from 'react'
 import { Facebook, Instagram, Music, ExternalLink, Youtube } from 'lucide-react'
 import Link from 'next/link'
 import { getAgencyConfig, AgencyConfig } from '@/lib/agency-config'
-import * as SupabaseStore from '@/lib/supabase-store'
+import { getStore } from '@/lib/store'
 
 export default function SocialFeed() {
   const [agencyConfig, setAgencyConfig] = useState<AgencyConfig>(getAgencyConfig())
 
-  // Charger la config depuis Supabase
-  useEffect(() => {
-    const loadConfig = async () => {
-      const settings = await SupabaseStore.getAgencySettings()
-      if (settings) {
-        setAgencyConfig(settings as any)
-      }
-    }
-    loadConfig()
-  }, [])
+  // En local, on utilise getAgencyConfig()
+  // En production, MySQL sera utilisé via API routes
   
   const socialPosts = [
     {

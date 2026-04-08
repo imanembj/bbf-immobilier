@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, User, Eye, Tag, Search, Pin } from 'lucide-react'
-import * as SupabaseStore from '@/lib/supabase-store'
+import { getStore } from '@/lib/store'
 import { BlogPost } from '@/lib/data'
 import { AnimatedText, AnimatedSection } from '@/components/animations'
 
@@ -17,9 +17,10 @@ export default function BlogPage() {
 
   useEffect(() => {
     const loadPosts = async () => {
-      const blogPosts = await SupabaseStore.getBlogPosts()
-      setPosts(blogPosts as any)
-      setFilteredPosts(blogPosts as any)
+      const store = getStore()
+      const allPosts = store.getBlogPosts()
+      setPosts(allPosts as any)
+      setFilteredPosts(allPosts as any)
     }
     loadPosts()
   }, [])

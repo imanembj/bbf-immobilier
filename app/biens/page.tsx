@@ -110,10 +110,10 @@ export default function BiensPage() {
     }
   }, [])
 
-  // Charger tous les biens depuis Supabase
+  // Charger tous les biens depuis MySQL
   useEffect(() => {
     const loadProperties = async () => {
-      const allProperties = await import('@/lib/supabase-store').then(m => m.getProperties())
+      const allProperties = await import('@/lib/mysql-store').then(m => m.getProperties())
     // Mapper tous les biens
     const storeProperties = allProperties.map(p => ({
       ...p,
@@ -122,7 +122,7 @@ export default function BiensPage() {
       rooms: p.rooms || p.beds || 0,
     }))
     
-      // Utiliser uniquement les biens Supabase
+      // Utiliser uniquement les biens MySQL
       const combined = storeProperties
       const unique = combined.filter((item: any, index: number, self: any[]) => 
         index === self.findIndex((t: any) => t.id === item.id)
