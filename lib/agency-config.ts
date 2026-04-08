@@ -70,11 +70,12 @@ export function useAgencyConfig() {
 // Import React pour le hook
 import React from 'react'
 
-// Fonction async pour charger depuis MySQL
+// Fonction async pour charger depuis MySQL via API
 export async function getAgencyConfigFromMySQL(): Promise<AgencyConfig> {
   try {
-    const { getAgencySettings } = await import('./mysql-store')
-    const settings = await getAgencySettings()
+    const response = await fetch('/api/settings')
+    if (!response.ok) return defaultConfig
+    const settings = await response.json()
     return settings || defaultConfig
   } catch {
     return defaultConfig
