@@ -375,7 +375,7 @@ export default function BiensPage() {
                       
                       {/* Badges */}
                       <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
-                        {property.featured && (
+                        {!!property.featured && (
                           <span className="text-white text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm shadow-lg" style={{ backgroundColor: '#55E0FF', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
                             Coup de Cœur
                           </span>
