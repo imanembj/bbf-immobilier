@@ -219,7 +219,7 @@ export default function BiensPage() {
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">Filtres</h2>
                 <button
-                  onClick={() => setFilters({ type: 'all', location: '', priceMin: '', priceMax: '', rooms: '', area: '' })}
+                  onClick={() => setFilters({ type: 'all', category: 'all', location: '', priceMin: '', priceMax: '', rooms: '', area: '' })}
                   className="text-sm text-primary-600 hover:text-primary-700 font-medium"
                 >
                   Réinitialiser
@@ -530,7 +530,7 @@ export default function BiensPage() {
                   Essayez de modifier vos critères de recherche
                 </p>
                 <button
-                  onClick={() => setFilters({ type: 'all', location: '', priceMin: '', priceMax: '', rooms: '', area: '' })}
+                  onClick={() => setFilters({ type: 'all', category: 'all', location: '', priceMin: '', priceMax: '', rooms: '', area: '' })}
                   className="btn-primary"
                 >
                   Réinitialiser les filtres
