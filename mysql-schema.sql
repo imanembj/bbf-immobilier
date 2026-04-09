@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   title VARCHAR(255) NOT NULL,
   excerpt TEXT NOT NULL,
   content LONGTEXT NOT NULL,
-  cover_image VARCHAR(500) NOT NULL,
+  cover_image MEDIUMTEXT NOT NULL,
   cover_image_position VARCHAR(50) DEFAULT '50% 50%',
   images JSON,
   links JSON,

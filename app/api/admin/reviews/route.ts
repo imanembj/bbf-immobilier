@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query, update, deleteRow } from '@/lib/mysql'
+import { update, deleteRow } from '@/lib/mysql'
+import { getAllReviews } from '@/lib/mysql-store'
 
 export async function GET() {
   try {
-    const sql = 'SELECT * FROM reviews ORDER BY created_at DESC'
-    const reviews = await query(sql)
+    const reviews = await getAllReviews()
     return NextResponse.json(reviews)
   } catch (error) {
     console.error('Error fetching reviews:', error)
