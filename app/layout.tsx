@@ -12,7 +12,13 @@ import { OrganizationStructuredData } from '@/components/StructuredData'
 import { FavoritesProvider } from '@/lib/favorites'
 import { defaultMetadata } from '@/lib/metadata'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const inter = Inter({ 
+  subsets: ['latin'], 
+  variable: '--font-inter',
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial']
+})
 
 export const metadata: Metadata = defaultMetadata
 
