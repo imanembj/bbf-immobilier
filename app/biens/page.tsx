@@ -20,7 +20,7 @@ const getCardPriceDisplay = (property: any): { price: string, period: string } =
       const { lowSeason, highSeason } = pricingInfo.seasonalPricing
       return {
         price: `${lowSeason}-${highSeason}`,
-        period: pricingInfo.period || '/nuit'
+        period: pricingInfo.period || property.period || '/nuit'
       }
     }
     

@@ -90,6 +90,7 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
   const [checkOutDate, setCheckOutDate] = useState('')
   const [adultsCount, setAdultsCount] = useState(2)
   const [childrenCount, setChildrenCount] = useState(0)
+  const [includeCleaningFee, setIncludeCleaningFee] = useState(false)
   const [activeMediaTab, setActiveMediaTab] = useState<'photos' | 'video' | 'virtual'>('photos')
   const [loading, setLoading] = useState(true)
 
@@ -952,6 +953,23 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
                   </div>
                 </div>
 
+                {/* Checkbox frais de ménage */}
+                {property.rentalConditions?.cleaningFee && (
+                  <div className="mb-4">
+                    <label className="flex items-center cursor-pointer p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={includeCleaningFee}
+                        onChange={(e) => setIncludeCleaningFee(e.target.checked)}
+                        className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                      />
+                      <span className="ml-3 text-sm text-gray-700">
+                        Inclure frais de ménage ({property.rentalConditions.cleaningFee}€)
+                      </span>
+                    </label>
+                  </div>
+                )}
+
                 {/* Calcul de la taxe de séjour */}
                 {(() => {
                   const nights = checkInDate && checkOutDate 
@@ -961,7 +979,8 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
                   const totalTaxe = adultsCount * taxePerNight * nights // Taxe uniquement sur les adultes
                   const totalGuests = adultsCount + childrenCount
                   const { subtotal, priceDisplay } = calculatePrice(property, nights)
-                  const total = subtotal + totalTaxe
+                  const cleaningFee = includeCleaningFee && property.rentalConditions?.cleaningFee ? property.rentalConditions.cleaningFee : 0
+                  const total = subtotal + totalTaxe + cleaningFee
 
                   return (
                     <>
@@ -984,6 +1003,12 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
                               </div>
                               <span>{totalTaxe.toFixed(2)}€</span>
                             </div>
+                            {cleaningFee > 0 && (
+                              <div className="flex justify-between text-gray-700">
+                                <span>Frais de ménage</span>
+                                <span>{cleaningFee.toFixed(2)}€</span>
+                              </div>
+                            )}
                             <div className="pt-2 border-t border-gray-300 flex justify-between font-bold text-gray-900">
                               <span>Total</span>
                               <span>{total.toFixed(2)}€</span>
@@ -1796,6 +1821,23 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
                     </div>
                   </div>
 
+                  {/* Checkbox frais de ménage */}
+                  {property.rentalConditions?.cleaningFee && (
+                    <div className="mb-4">
+                      <label className="flex items-center cursor-pointer p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={includeCleaningFee}
+                          onChange={(e) => setIncludeCleaningFee(e.target.checked)}
+                          className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                        />
+                        <span className="ml-3 text-sm text-gray-700">
+                          Inclure frais de ménage ({property.rentalConditions.cleaningFee}€)
+                        </span>
+                      </label>
+                    </div>
+                  )}
+
                   {/* Calcul de la taxe de séjour */}
                   {(() => {
                     const nights = checkInDate && checkOutDate 
@@ -1805,7 +1847,8 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
                     const totalTaxe = adultsCount * taxePerNight * nights // Taxe uniquement sur les adultes
                     const totalGuests = adultsCount + childrenCount
                     const { subtotal, priceDisplay } = calculatePrice(property, nights)
-                    const total = subtotal + totalTaxe
+                    const cleaningFee = includeCleaningFee && property.rentalConditions?.cleaningFee ? property.rentalConditions.cleaningFee : 0
+                    const total = subtotal + totalTaxe + cleaningFee
 
                     return (
                       <>
@@ -1828,6 +1871,12 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
                                 </div>
                                 <span>{totalTaxe.toFixed(2)}€</span>
                               </div>
+                              {cleaningFee > 0 && (
+                                <div className="flex justify-between text-gray-700">
+                                  <span>Frais de ménage</span>
+                                  <span>{cleaningFee.toFixed(2)}€</span>
+                                </div>
+                              )}
                               <div className="pt-2 border-t border-gray-300 flex justify-between font-bold text-gray-900">
                                 <span>Total</span>
                                 <span>{total.toFixed(2)}€</span>
