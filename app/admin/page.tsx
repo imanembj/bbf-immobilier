@@ -2146,15 +2146,15 @@ export default function AdminDashboard() {
                 
                 {/* Changer l'adresse email */}
                 <div className="mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-3">Modifier l'adresse email</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">Modifier l'adresse email administrateur</h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Nouvelle adresse email</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Adresse email</label>
                       <input 
                         type="email" 
                         value={newAdminEmail}
                         onChange={(e) => setNewAdminEmail(e.target.value)}
-                        placeholder="Nouvelle adresse email" 
+                        placeholder="admin@exemple.com" 
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" 
                       />
                     </div>
