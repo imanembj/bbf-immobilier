@@ -1,8 +1,8 @@
 // Configuration Resend pour l'envoi d'emails
 import { Resend } from 'resend'
 
-// Initialiser Resend avec la clé API
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Initialiser Resend avec la clé API (optionnel)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 // Email de l'expéditeur
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'BBF Immobilier <contact@bulle-immobiliere.mq>'
@@ -17,6 +17,11 @@ export async function sendEmail({
   subject: string
   html: string
 }) {
+  if (!resend) {
+    console.warn('⚠️ Resend non configuré - Email non envoyé')
+    return { success: false, error: 'Resend API key not configured' }
+  }
+
   try {
     const data = await resend.emails.send({
       from: FROM_EMAIL,
