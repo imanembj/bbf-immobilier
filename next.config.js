@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Désactiver le cache pour forcer le rechargement
+  generateBuildId: async () => {
+    return `build-${Date.now()}`
+  },
+  
   // Exclure mysql2 du bundle client
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -55,7 +60,7 @@ const nextConfig = {
     // En production, CSP avec Supabase autorisé
     return [
       {
-        source: '/:path*',
+        source: '/:path((?!_next).*)*',
         headers: [
           {
             key: 'X-DNS-Prefetch-Control',
