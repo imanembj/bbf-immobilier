@@ -9,6 +9,7 @@ import { AnimatedText, AnimatedSection } from '@/components/animations'
 import { useFavorites } from '@/lib/favorites'
 import toast from 'react-hot-toast'
 import MortgageCalculator from '@/components/MortgageCalculator'
+import { getCategoryBadge } from '@/lib/property-category'
 
 function AcheterPageContent() {
   const searchParams = useSearchParams()
@@ -464,9 +465,18 @@ function AcheterPageContent() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-bold mb-1 line-clamp-1 group-hover:translate-y-[-2px] transition-transform duration-300">
+                  <h3 className="text-xl font-bold mb-2 line-clamp-1 group-hover:translate-y-[-2px] transition-transform duration-300">
                     {property.title}
                   </h3>
+
+                  {/* Category Badge */}
+                  {property.propertyCategory && (
+                    <div className="mb-2">
+                      <span className={getCategoryBadge(property.propertyCategory).className}>
+                        {getCategoryBadge(property.propertyCategory).label}
+                      </span>
+                    </div>
+                  )}
 
                   {/* Features */}
                   <div className="flex items-center gap-3 text-white/70 text-xs mb-1.5">
