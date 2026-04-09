@@ -12,6 +12,21 @@ interface BlogPostFormProps {
 }
 
 export default function BlogPostForm({ post, onSave, onCancel }: BlogPostFormProps) {
+  // S'assurer que images, links, tags sont toujours des tableaux
+  const ensureArray = (value: any) => {
+    if (!value) return []
+    if (Array.isArray(value)) return value
+    if (typeof value === 'string') {
+      try {
+        const parsed = JSON.parse(value)
+        return Array.isArray(parsed) ? parsed : []
+      } catch {
+        return []
+      }
+    }
+    return []
+  }
+
   const [formData, setFormData] = useState({
     slug: post?.slug || '',
     title: post?.title || '',
@@ -19,10 +34,10 @@ export default function BlogPostForm({ post, onSave, onCancel }: BlogPostFormPro
     content: post?.content || '',
     coverImage: post?.coverImage || '',
     coverImagePosition: post?.coverImagePosition || '50% 50%',
-    images: post?.images || [],
-    links: post?.links || [],
+    images: ensureArray(post?.images),
+    links: ensureArray(post?.links),
     category: post?.category || 'actualites' as BlogPost['category'],
-    tags: post?.tags || [],
+    tags: ensureArray(post?.tags),
     author: post?.author || 'BBF Immobilier',
     isPinned: post?.isPinned || false,
     isPublished: post?.isPublished || false,

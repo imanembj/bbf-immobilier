@@ -951,10 +951,17 @@ export default function AdminDashboard() {
                             onClick={async () => {
                               try {
                                 const newStatus = property.status === 'brouillon' ? 'disponible' : 'brouillon'
+                                
+                                // Optimistic update - mettre à jour l'UI immédiatement
+                                setProperties(prev => prev.map(p => 
+                                  p.id === property.id ? { ...p, status: newStatus } : p
+                                ))
+                                
                                 await adminAPI.updateProperty(property.id, { status: newStatus })
-                                await loadData()
                                 toast.success(newStatus === 'brouillon' ? 'Bien mis en brouillon' : 'Bien publié')
                               } catch (error) {
+                                // Rollback en cas d'erreur
+                                await loadData()
                                 toast.error('Erreur lors de la mise à jour')
                               }
                             }}
@@ -1764,11 +1771,17 @@ export default function AdminDashboard() {
                         <button
                           onClick={async () => {
                             try {
+                              const newPublished = !post.isPublished
                               
-                              await adminAPI.updateBlogPost(post.id, { isPublished: !post.isPublished })
-                              await loadData()
+                              // Optimistic update
+                              setBlogPosts(prev => prev.map(p => 
+                                p.id === post.id ? { ...p, isPublished: newPublished } : p
+                              ))
+                              
+                              await adminAPI.updateBlogPost(post.id, { isPublished: newPublished })
                               toast.success(post.isPublished ? 'Article mis en brouillon' : 'Article publié')
                             } catch (error) {
+                              await loadData()
                               toast.error('Erreur lors de la mise à jour')
                             }
                           }}
@@ -1792,10 +1805,17 @@ export default function AdminDashboard() {
                           <button
                             onClick={async () => {
                               try {
-                                await adminAPI.updateBlogPost(post.id, { isPinned: !post.isPinned })
-                                await loadData()
+                                const newPinned = !post.isPinned
+                                
+                                // Optimistic update
+                                setBlogPosts(prev => prev.map(p => 
+                                  p.id === post.id ? { ...p, isPinned: newPinned } : p
+                                ))
+                                
+                                await adminAPI.updateBlogPost(post.id, { isPinned: newPinned })
                                 toast.success(post.isPinned ? 'Article désépinglé' : 'Article épinglé')
                               } catch (error) {
+                                await loadData()
                                 toast.error('Erreur lors de la mise à jour')
                               }
                             }}
