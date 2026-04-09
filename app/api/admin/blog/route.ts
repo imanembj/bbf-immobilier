@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query, insert, update, deleteRow } from '@/lib/mysql'
+import { query, update, deleteRow } from '@/lib/mysql'
+import { addBlogPost, updateBlogPost as updateBlogPostStore } from '@/lib/mysql-store'
 
 export async function GET() {
   try {
@@ -16,20 +17,17 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
     
-    const newPost = {
-      id: Date.now().toString(),
-      ...data,
-      views: 0,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      published_at: data.isPublished ? new Date().toISOString() : null,
-    }
-
-    await insert('blog_posts', newPost)
-    return NextResponse.json({ success: true, id: newPost.id })
+    // Utiliser addBlogPost de mysql-store qui gère correctement les conversions
+    await addBlogPost(data)
+    
+    return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error creating blog post:', error)
-    return NextResponse.json({ error: 'Erreur lors de la création' }, { status: 500 })
+    console.error('Error details:', error)
+    return NextResponse.json({ 
+      error: 'Erreur lors de la création', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
+    }, { status: 500 })
   }
 }
 
@@ -41,17 +39,9 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'ID requis' }, { status: 400 })
     }
 
-    const dbUpdates: any = {
-      ...updates,
-      updated_at: new Date().toISOString(),
-    }
-
-    // Si on publie l'article pour la première fois
-    if (updates.isPublished && !updates.publishedAt) {
-      dbUpdates.published_at = new Date().toISOString()
-    }
-
-    await update('blog_posts', dbUpdates, 'id = ?', [id])
+    // Utiliser updateBlogPostStore qui gère correctement les conversions
+    await updateBlogPostStore(id, updates)
+    
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error updating blog post:', error)
