@@ -38,7 +38,7 @@ ON DUPLICATE KEY UPDATE updated_at = NOW();
 
 -- Insertion des utilisateurs admin
 INSERT INTO admin_users (id, email, password_hash, name, role, active, last_login, created_at, updated_at) VALUES
-('c0ff17a6-aa4d-4afb-9528-b6797201fe0c', 'admin@bulle-immobiliere.mq', '$2a$10$HASH_A_GENERER', 'Administrateur', 'admin', true, '2026-04-07 23:57:35.246', '2026-03-21 15:51:54.644254', '2026-04-07 23:57:35.361929')
+('c0ff17a6-aa4d-4afb-9528-b6797201fe0c', 'admin@bulle-immobiliere.mq', 'admin123', 'Administrateur', 'admin', true, '2026-04-07 23:57:35.246', '2026-03-21 15:51:54.644254', '2026-04-07 23:57:35.361929')
 ON DUPLICATE KEY UPDATE updated_at = NOW();
 
 -- ⚠️ IMPORTANT SÉCURITÉ ⚠️
