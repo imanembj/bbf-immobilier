@@ -2144,13 +2144,6 @@ export default function AdminDashboard() {
                   Sécurité & Accès
                 </h3>
                 
-                {/* Informations de connexion actuelles */}
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm font-semibold text-blue-900 mb-2">ℹ️ Informations de connexion</p>
-                  <p className="text-sm text-blue-800">Email actuel : <span className="font-semibold">{adminEmail}</span></p>
-                  <p className="text-xs text-blue-600 mt-2">Session active depuis : {new Date(parseInt(localStorage.getItem('admin_login_time') || '0')).toLocaleString('fr-FR')}</p>
-                </div>
-
                 {/* Changer l'adresse email */}
                 <div className="mb-6">
                   <h4 className="font-semibold text-gray-900 mb-3">Modifier l'adresse email</h4>
@@ -2161,7 +2154,7 @@ export default function AdminDashboard() {
                         type="email" 
                         value={newAdminEmail}
                         onChange={(e) => setNewAdminEmail(e.target.value)}
-                        placeholder="nouvelle@email.com" 
+                        placeholder="Nouvelle adresse email" 
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" 
                       />
                     </div>
@@ -2183,7 +2176,7 @@ export default function AdminDashboard() {
                         type="password" 
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
-                        placeholder="Mot de passe actuel" 
+                        placeholder="••••••••" 
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" 
                       />
                     </div>
@@ -2193,7 +2186,7 @@ export default function AdminDashboard() {
                         type="password" 
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        placeholder="Nouveau mot de passe" 
+                        placeholder="••••••••" 
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" 
                       />
                       <p className="text-xs text-gray-500 mt-1">
@@ -2206,7 +2199,7 @@ export default function AdminDashboard() {
                         type="password" 
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="Confirmer le mot de passe" 
+                        placeholder="••••••••" 
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" 
                       />
                     </div>
