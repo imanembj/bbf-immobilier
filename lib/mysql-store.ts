@@ -542,8 +542,9 @@ export async function getBlogPosts() {
   try {
     const sql = `
       SELECT * FROM blog_posts 
-      WHERE is_published = true 
-      ORDER BY is_pinned DESC, published_at DESC
+      WHERE is_published = 1
+      ORDER BY is_pinned DESC, 
+               COALESCE(published_at, created_at) DESC
     `
     const rows = await query<any>(sql)
     return rows.map(convertToCamelCase)
@@ -624,9 +625,14 @@ export async function updateBlogPost(id: string, updates: Partial<BlogPost>) {
   if (updates.author !== undefined) data.author = updates.author
   if (updates.isPinned !== undefined) data.is_pinned = updates.isPinned
   if (updates.isPublished !== undefined) {
-    data.is_published = updates.isPublished
-    if (updates.isPublished && !updates.publishedAt) {
-      data.published_at = new Date().toISOString()
+    data.is_published = updates.isPublished ? 1 : 0
+    // Si on publie et qu'il n'y a pas de date de publication, la définir maintenant
+    if (updates.isPublished) {
+      // Récupérer l'article pour vérifier s'il a déjà une published_at
+      const existingPost = await query('SELECT published_at FROM blog_posts WHERE id = ?', [id])
+      if (!existingPost[0]?.published_at) {
+        data.published_at = new Date().toISOString()
+      }
     }
   }
   if (updates.publishedAt !== undefined) data.published_at = updates.publishedAt
