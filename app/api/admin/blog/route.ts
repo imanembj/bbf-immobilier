@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query, update, deleteRow } from '@/lib/mysql'
-import { addBlogPost, updateBlogPost as updateBlogPostStore } from '@/lib/mysql-store'
+import { deleteRow } from '@/lib/mysql'
+import { addBlogPost, updateBlogPost as updateBlogPostStore, getAllBlogPosts } from '@/lib/mysql-store'
 
 export async function GET() {
   try {
-    const sql = 'SELECT * FROM blog_posts ORDER BY created_at DESC'
-    const posts = await query(sql)
+    const posts = await getAllBlogPosts()
     return NextResponse.json(posts)
   } catch (error) {
     console.error('Error fetching blog posts:', error)
