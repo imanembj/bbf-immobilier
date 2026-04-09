@@ -4,13 +4,25 @@ import { useState, useEffect } from 'react'
 import { Facebook, Instagram, Music, ExternalLink, Youtube } from 'lucide-react'
 import Link from 'next/link'
 import { getAgencyConfig, AgencyConfig } from '@/lib/agency-config'
-import { getStore } from '@/lib/store'
 
 export default function SocialFeed() {
   const [agencyConfig, setAgencyConfig] = useState<AgencyConfig>(getAgencyConfig())
 
-  // En local, on utilise getAgencyConfig()
-  // En production, MySQL sera utilisé via API routes
+  // Charger depuis MySQL via API
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch('/api/settings')
+        if (response.ok) {
+          const settings = await response.json()
+          setAgencyConfig(settings)
+        }
+      } catch (error) {
+        console.error('Error loading agency config:', error)
+      }
+    }
+    loadConfig()
+  }, [])
   
   const socialPosts = [
     {

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, User, Eye, Tag, Search, Pin } from 'lucide-react'
-import { getStore } from '@/lib/store'
+import { apiClient } from '@/lib/api-client'
 import { BlogPost } from '@/lib/data'
 import { AnimatedText, AnimatedSection } from '@/components/animations'
 
@@ -17,10 +17,13 @@ export default function BlogPage() {
 
   useEffect(() => {
     const loadPosts = async () => {
-      const store = getStore()
-      const allPosts = store.getBlogPosts()
-      setPosts(allPosts as any)
-      setFilteredPosts(allPosts as any)
+      try {
+        const allPosts = await apiClient.getBlogPosts()
+        setPosts(allPosts as any)
+        setFilteredPosts(allPosts as any)
+      } catch (error) {
+        console.error('Error loading blog posts:', error)
+      }
     }
     loadPosts()
   }, [])

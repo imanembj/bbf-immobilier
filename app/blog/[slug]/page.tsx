@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Calendar, User, Eye, Tag, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Link as LinkIcon } from 'lucide-react'
-import { getStore } from '@/lib/store'
+import { apiClient } from '@/lib/api-client'
 import { BlogPost } from '@/lib/data'
 import toast from 'react-hot-toast'
 
@@ -18,24 +18,32 @@ export default function BlogPostPage() {
 
   useEffect(() => {
     const loadPost = async () => {
-      const slug = params.slug as string
-      const store = getStore()
-      const fetchedPost = store.getBlogPostBySlug(slug)
+      try {
+        const slug = params.slug as string
+        const fetchedPost = await apiClient.getBlogPost(slug)
 
-      if (!fetchedPost) {
+        if (!fetchedPost) {
+          router.push('/blog')
+          return
+        }
+
+        setPost(fetchedPost as any)
+
+        // Incrémenter les vues
+        await apiClient.incrementBlogViews(slug)
+
+        // Articles similaires (même catégorie)
+        const allPosts = await apiClient.getBlogPosts()
+        const related = allPosts
+          .filter((p: any) => p.id !== fetchedPost.id && p.category === fetchedPost.category)
+          .slice(0, 3)
+        setRelatedPosts(related as any)
+      } catch (error) {
+        console.error('Error loading blog post:', error)
         router.push('/blog')
-        return
+      } finally {
+        setLoading(false)
       }
-
-      setPost(fetchedPost as any)
-
-      // Articles similaires (même catégorie)
-      const allPosts = store.getBlogPosts()
-      const related = allPosts
-        .filter((p: any) => p.id !== fetchedPost.id && p.category === fetchedPost.category)
-        .slice(0, 3)
-      setRelatedPosts(related as any)
-      setLoading(false)
     }
     loadPost()
   }, [params.slug, router])

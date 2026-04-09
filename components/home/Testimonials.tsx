@@ -2,23 +2,22 @@
 
 import { useState, useEffect } from 'react'
 import { Star, Quote } from 'lucide-react'
-import { getStore } from '@/lib/store'
+import { apiClient } from '@/lib/api-client'
 import type { Review } from '@/lib/data'
 
 export default function Testimonials() {
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Charger les avis approuvés depuis Supabase
+  // Charger les avis approuvés depuis MySQL
   useEffect(() => {
     const loadReviews = async () => {
       try {
-        const store = getStore()
-        const allReviews = store.getReviews()
+        const allReviews = await apiClient.getReviews()
         // Prendre les 8 meilleurs avis (rating >= 4)
         const topReviews = allReviews
-          .filter(review => review.rating >= 4)
-          .sort((a, b) => b.rating - a.rating)
+          .filter((review: Review) => review.rating >= 4)
+          .sort((a: Review, b: Review) => b.rating - a.rating)
           .slice(0, 8)
         setReviews(topReviews)
       } catch (error) {

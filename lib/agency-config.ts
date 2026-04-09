@@ -23,31 +23,28 @@ const defaultConfig: AgencyConfig = {
   youtube: "https://www.youtube.com/@BBF-Immobilier",
 }
 
-// Récupérer la configuration de l'agence
+// Récupérer la configuration de l'agence (fallback uniquement)
+// Les composants doivent charger depuis MySQL via getAgencyConfigFromMySQL()
 export function getAgencyConfig(): AgencyConfig {
-  if (typeof window === 'undefined') {
-    return defaultConfig
-  }
-
-  // Essayer d'abord localStorage (pour compatibilité)
-  const stored = localStorage.getItem('agency_config')
-  if (stored) {
-    try {
-      return JSON.parse(stored)
-    } catch {
-      return defaultConfig
-    }
-  }
-  
-  // Sinon retourner la config par défaut
-  // (MySQL sera chargé de manière asynchrone dans les composants)
+  // Retourner la config par défaut
+  // MySQL sera chargé de manière asynchrone dans les composants via /api/settings
   return defaultConfig
 }
 
-// Sauvegarder la configuration de l'agence
-export function saveAgencyConfig(config: AgencyConfig): void {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('agency_config', JSON.stringify(config))
+// Sauvegarder la configuration de l'agence dans MySQL
+export async function saveAgencyConfig(config: AgencyConfig): Promise<void> {
+  try {
+    const response = await fetch('/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config),
+    })
+    if (!response.ok) {
+      throw new Error('Failed to save settings')
+    }
+  } catch (error) {
+    console.error('Error saving agency config:', error)
+    throw error
   }
 }
 

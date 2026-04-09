@@ -34,13 +34,7 @@ export default function AppointmentForm({ onSuccess }: AppointmentFormProps) {
       const data = await response.json()
 
       if (response.ok) {
-        // Sauvegarder dans localStorage côté client
-        if (data.request) {
-          const existingRequests = JSON.parse(localStorage.getItem('clientRequests') || '[]')
-          existingRequests.push(data.request)
-          localStorage.setItem('clientRequests', JSON.stringify(existingRequests))
-        }
-        
+        // Les données sont sauvegardées dans MySQL via l'API
         toast.success(data.message || 'Demande de rendez-vous envoyée !')
         setFormData({
           name: '',

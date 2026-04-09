@@ -10,8 +10,26 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
   const [agencyConfig, setAgencyConfig] = useState<AgencyConfig>(getAgencyConfig())
 
-  // En local, on utilise getAgencyConfig()
-  // En production, MySQL sera utilisé via API routes
+  // Charger depuis MySQL via API
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch('/api/settings')
+        if (response.ok) {
+          const settings = await response.json()
+          setAgencyConfig(settings)
+        }
+      } catch (error) {
+        console.error('Error loading agency config:', error)
+      }
+    }
+    loadConfig()
+    
+    // Écouter les mises à jour
+    const handleUpdate = () => loadConfig()
+    window.addEventListener('agency-config-updated', handleUpdate)
+    return () => window.removeEventListener('agency-config-updated', handleUpdate)
+  }, [])
 
   const footerLinks = {
     services: [

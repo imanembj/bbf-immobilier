@@ -1,10 +1,18 @@
 'use client'
 
+// StorageMonitor désactivé - on utilise MySQL maintenant, plus de localStorage
+export default function StorageMonitor() {
+  // Retourner null car on n'utilise plus localStorage
+  return null
+}
+
+/*
+// Ancien code localStorage - conservé pour référence
 import { useEffect, useState } from 'react'
 import { getStore } from '@/lib/store'
 import { HardDrive, AlertTriangle, CheckCircle } from 'lucide-react'
 
-export default function StorageMonitor() {
+export default function StorageMonitorOld() {
   const [storageInfo, setStorageInfo] = useState<{
     used: number
     usedMB: string

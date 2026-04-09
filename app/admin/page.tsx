@@ -153,7 +153,7 @@ export default function AdminDashboard() {
   const loadData = async () => {
     try {
       // Charger toutes les données depuis MySQL via API routes
-      const [propsRes, msgsRes, revsRes, partsRes, faqsRes, reqsRes, blogsRes] = await Promise.all([
+      const [propsRes, msgsRes, revsRes, partsRes, faqsRes, reqsRes, blogsRes, settingsRes] = await Promise.all([
         fetch('/api/properties/all'),
         fetch('/api/admin/messages'),
         fetch('/api/admin/reviews'),
@@ -161,6 +161,7 @@ export default function AdminDashboard() {
         fetch('/api/faqs'),
         fetch('/api/requests'),
         fetch('/api/admin/blog'),
+        fetch('/api/settings'),
       ])
 
       const props = await propsRes.json()
@@ -170,6 +171,7 @@ export default function AdminDashboard() {
       const faqs = await faqsRes.json()
       const reqs = await reqsRes.json()
       const blogs = await blogsRes.json()
+      const settings = await settingsRes.json()
       
       setProperties(props)
       setMessages(msgs)
@@ -179,8 +181,7 @@ export default function AdminDashboard() {
       setClientRequests(reqs)
       setBlogPosts(blogs)
       
-      // Settings depuis agency-config
-      const settings = getAgencyConfig()
+      // Settings depuis MySQL
       if (settings) {
         setAgencyConfig(settings)
       }
@@ -443,7 +444,7 @@ export default function AdminDashboard() {
 
   const handleSaveAgencyInfo = async () => {
     try {
-      saveAgencyConfig(agencyConfig)
+      await saveAgencyConfig(agencyConfig)
       toast.success('Informations de l\'agence sauvegardées avec succès')
       // Forcer le rechargement pour mettre à jour partout
       window.dispatchEvent(new Event('agency-config-updated'))

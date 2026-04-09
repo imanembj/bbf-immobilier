@@ -6,7 +6,6 @@ import toast from 'react-hot-toast'
 import { AnimatedText, AnimatedSection } from '@/components/animations'
 import Image from 'next/image'
 import { getAgencyConfig, AgencyConfig } from '@/lib/agency-config'
-import { getStore } from '@/lib/store'
 import { FAQ } from '@/lib/data'
 import { AppointmentForm } from '@/components/forms'
 import Modal from '@/components/Modal'
@@ -77,13 +76,7 @@ export default function ContactPage() {
       const data = await response.json()
 
       if (response.ok) {
-        // Sauvegarder dans localStorage côté client
-        if (data.messageData) {
-          const existingMessages = JSON.parse(localStorage.getItem('messages') || '[]')
-          existingMessages.push(data.messageData)
-          localStorage.setItem('messages', JSON.stringify(existingMessages))
-        }
-        
+        // Les données sont sauvegardées dans MySQL via l'API
         toast.success(data.message || 'Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.')
         setFormData({ name: '', email: '', phone: '', subject: 'general', message: '' })
       } else {

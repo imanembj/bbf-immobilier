@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { CheckCircle, Users, Award, ArrowRight, Building2 } from 'lucide-react'
 import { AnimatedText, AnimatedSection } from '@/components/animations'
-import { getStore } from '@/lib/store'
 import { Partner, initialPartners } from '@/lib/data'
 
 export default function NosPartenairesPage() {
