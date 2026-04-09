@@ -56,9 +56,9 @@ export default function Footer() {
   }
 
   const socialLinks = [
-    ...(agencyConfig.facebook ? [{ name: 'Facebook', icon: Facebook, href: agencyConfig.facebook, color: 'hover:text-blue-600' }] : []),
-    ...(agencyConfig.instagram ? [{ name: 'Instagram', icon: Instagram, href: agencyConfig.instagram, color: 'hover:text-pink-600' }] : []),
-    ...(agencyConfig.tiktok ? [{ name: 'TikTok', icon: Music, href: agencyConfig.tiktok, color: 'hover:text-gray-900' }] : []),
+    ...(agencyConfig?.facebook ? [{ name: 'Facebook', icon: Facebook, href: agencyConfig.facebook, color: 'hover:text-blue-600' }] : []),
+    ...(agencyConfig?.instagram ? [{ name: 'Instagram', icon: Instagram, href: agencyConfig.instagram, color: 'hover:text-pink-600' }] : []),
+    ...(agencyConfig?.tiktok ? [{ name: 'TikTok', icon: Music, href: agencyConfig.tiktok, color: 'hover:text-gray-900' }] : []),
   ]
 
   return (
@@ -74,7 +74,7 @@ export default function Footer() {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">BBF</h2>
-                <p className="text-sm text-gray-400">{agencyConfig.name}</p>
+                <p className="text-sm text-gray-400">{agencyConfig?.name || 'Bulle Immobilière'}</p>
               </div>
             </Link>
             <p className="text-gray-400 mb-6 leading-relaxed">
@@ -86,23 +86,23 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-primary-400 mt-0.5 flex-shrink-0" />
-                <span className="text-sm">{agencyConfig.address}</span>
+                <span className="text-sm">{agencyConfig?.address || 'Rivière-Pilote, Martinique'}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary-400 flex-shrink-0" />
-                <a href={`tel:${agencyConfig.phone.replace(/\s/g, '')}`} className="text-sm hover:text-primary-400 transition-colors">
-                  {agencyConfig.phone}
+                <a href={`tel:${agencyConfig?.phone?.replace(/\s/g, '') || ''}`} className="text-sm hover:text-primary-400 transition-colors">
+                  {agencyConfig?.phone || '+596 696 00 74 20'}
                 </a>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-primary-400 flex-shrink-0" />
-                <a href={`mailto:${agencyConfig.email}`} className="text-sm hover:text-primary-400 transition-colors">
-                  {agencyConfig.email}
+                <a href={`mailto:${agencyConfig?.email || ''}`} className="text-sm hover:text-primary-400 transition-colors">
+                  {agencyConfig?.email || 'contact@bulle-immobiliere.mq'}
                 </a>
               </div>
               <div className="flex items-center space-x-3">
                 <Clock className="w-5 h-5 text-primary-400 flex-shrink-0" />
-                <span className="text-sm">{agencyConfig.hours}</span>
+                <span className="text-sm">{agencyConfig?.hours || 'Lun-Ven: 9h-18h, Sam: 9h-13h'}</span>
               </div>
             </div>
           </div>

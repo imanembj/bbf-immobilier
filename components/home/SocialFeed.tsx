@@ -30,28 +30,28 @@ export default function SocialFeed() {
       image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=600',
       caption: 'Nouvelle villa disponible à Nice ! 🏖️ #Immobilier #Nice',
       likes: 245,
-      link: agencyConfig.instagram || 'https://instagram.com/bulle_immobiliere',
+      link: agencyConfig?.instagram || 'https://instagram.com/bulle_immobiliere',
     },
     {
       platform: 'tiktok',
       image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=600',
       caption: 'Visite virtuelle de notre dernier bien 🎥',
       likes: 1200,
-      link: agencyConfig.tiktok || 'https://tiktok.com/@bulle_immobiliere',
+      link: agencyConfig?.tiktok || 'https://tiktok.com/@bulle_immobiliere',
     },
     {
       platform: 'facebook',
       image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=600',
       caption: 'Conseils pour bien choisir votre location 💡',
       likes: 189,
-      link: agencyConfig.facebook || 'https://facebook.com/bulle-immobiliere',
+      link: agencyConfig?.facebook || 'https://facebook.com/bulle-immobiliere',
     },
     {
       platform: 'youtube',
       image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=600',
       caption: 'Visite virtuelle complète de notre dernière villa 🎬 #YouTube',
       likes: 856,
-      link: agencyConfig.youtube || 'https://www.youtube.com/@BBF-Immobilier',
+      link: agencyConfig?.youtube || 'https://www.youtube.com/@BBF-Immobilier',
     },
   ]
 
@@ -103,7 +103,7 @@ export default function SocialFeed() {
 
         {/* Social Links */}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {agencyConfig.instagram && (
+          {agencyConfig?.instagram && (
             <a
               href={agencyConfig.instagram}
               target="_blank"
@@ -115,7 +115,7 @@ export default function SocialFeed() {
               <ExternalLink className="w-4 h-4 transition-opacity" />
             </a>
           )}
-          {agencyConfig.tiktok && (
+          {agencyConfig?.tiktok && (
             <a
               href={agencyConfig.tiktok}
               target="_blank"
@@ -127,7 +127,7 @@ export default function SocialFeed() {
               <ExternalLink className="w-4 h-4 transition-opacity" />
             </a>
           )}
-          {agencyConfig.facebook && (
+          {agencyConfig?.facebook && (
             <a
               href={agencyConfig.facebook}
               target="_blank"
@@ -139,7 +139,7 @@ export default function SocialFeed() {
               <ExternalLink className="w-4 h-4 transition-opacity" />
             </a>
           )}
-          {agencyConfig.youtube && (
+          {agencyConfig?.youtube && (
             <a
               href={agencyConfig.youtube}
               target="_blank"
