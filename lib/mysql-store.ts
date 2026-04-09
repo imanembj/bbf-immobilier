@@ -193,24 +193,36 @@ export async function updateProperty(id: string, updates: Partial<Property>): Pr
   if (updates.baths !== undefined) data.baths = updates.baths
   if (updates.area !== undefined) data.area = updates.area
   if (updates.guests !== undefined) data.guests = updates.guests
-  if (updates.images !== undefined) data.images = JSON.stringify(updates.images)
+  if (updates.images !== undefined) data.images = typeof updates.images === 'string' ? updates.images : JSON.stringify(updates.images)
   if (updates.videoUrl !== undefined) data.video_url = updates.videoUrl
   if (updates.virtualTourUrl !== undefined) data.virtual_tour_url = updates.virtualTourUrl
-  if (updates.features !== undefined) data.features = JSON.stringify(updates.features)
-  if (updates.amenities !== undefined) data.amenities = JSON.stringify(updates.amenities)
-  if ((updates as any).rules !== undefined) data.rules = JSON.stringify((updates as any).rules)
-  if (updates.detailedDescription !== undefined) data.detailed_description = JSON.stringify(updates.detailedDescription)
-  if (updates.environment !== undefined) data.environment = JSON.stringify(updates.environment)
-  if (updates.rentalConditions !== undefined) data.rental_conditions = JSON.stringify(updates.rentalConditions)
-  if (updates.purchaseConditions !== undefined) data.purchase_conditions = JSON.stringify(updates.purchaseConditions)
-  if (updates.fees !== undefined) data.fees = JSON.stringify(updates.fees)
-  if (updates.legalInfo !== undefined) data.legal_info = JSON.stringify(updates.legalInfo)
-  if ((updates as any).pricingInfo !== undefined) data.pricing_info = JSON.stringify((updates as any).pricingInfo)
+  if (updates.features !== undefined) data.features = typeof updates.features === 'string' ? updates.features : JSON.stringify(updates.features)
+  if (updates.amenities !== undefined) data.amenities = typeof updates.amenities === 'string' ? updates.amenities : JSON.stringify(updates.amenities)
+  if ((updates as any).rules !== undefined) data.rules = typeof (updates as any).rules === 'string' ? (updates as any).rules : JSON.stringify((updates as any).rules)
+  if (updates.detailedDescription !== undefined) data.detailed_description = typeof updates.detailedDescription === 'string' ? updates.detailedDescription : JSON.stringify(updates.detailedDescription)
+  if (updates.environment !== undefined) data.environment = typeof updates.environment === 'string' ? updates.environment : JSON.stringify(updates.environment)
+  if (updates.rentalConditions !== undefined) data.rental_conditions = typeof updates.rentalConditions === 'string' ? updates.rentalConditions : JSON.stringify(updates.rentalConditions)
+  if (updates.purchaseConditions !== undefined) data.purchase_conditions = typeof updates.purchaseConditions === 'string' ? updates.purchaseConditions : JSON.stringify(updates.purchaseConditions)
+  if (updates.fees !== undefined) data.fees = typeof updates.fees === 'string' ? updates.fees : JSON.stringify(updates.fees)
+  if (updates.legalInfo !== undefined) data.legal_info = typeof updates.legalInfo === 'string' ? updates.legalInfo : JSON.stringify(updates.legalInfo)
+  if ((updates as any).pricingInfo !== undefined) data.pricing_info = typeof (updates as any).pricingInfo === 'string' ? (updates as any).pricingInfo : JSON.stringify((updates as any).pricingInfo)
   if ((updates as any).status !== undefined) data.status = (updates as any).status
   if ((updates as any).featured !== undefined) data.featured = (updates as any).featured
   if ((updates as any).available !== undefined) data.available = (updates as any).available
   
-  await update('properties', data, 'id = ?', [id])
+  // 🔍 DEBUG: Logger les données avant sauvegarde
+  console.log('🔍 updateProperty - ID:', id)
+  console.log('🔍 updateProperty - rentalConditions:', updates.rentalConditions)
+  console.log('🔍 updateProperty - data.rental_conditions:', data.rental_conditions)
+  console.log('🔍 updateProperty - Nombre de champs à mettre à jour:', Object.keys(data).length)
+  
+  try {
+    const result = await update('properties', data, 'id = ?', [id])
+    console.log('✅ updateProperty - Résultat:', result)
+  } catch (error) {
+    console.error('❌ updateProperty - Erreur:', error)
+    throw error
+  }
 }
 
 export async function deleteProperty(id: string): Promise<void> {
