@@ -9,6 +9,7 @@ import { useSearchParams } from 'next/navigation'
 import { AnimatedText, AnimatedSection } from '@/components/animations'
 import { useFavorites } from '@/lib/favorites'
 import toast from 'react-hot-toast'
+import { getCategoryBadge } from '@/lib/property-category'
 
 function LocationAnnuellePageContent() {
   const searchParams = useSearchParams()
@@ -30,6 +31,7 @@ function LocationAnnuellePageContent() {
     priceMin: '',
     priceMax: '',
     type: 'all',
+    category: 'all',
     rooms: '',
     area: '',
   })
@@ -177,6 +179,7 @@ function LocationAnnuellePageContent() {
     if (filters.location && !property.location.toLowerCase().includes(filters.location.toLowerCase())) return false
     if (filters.priceMin && property.price < parseInt(filters.priceMin)) return false
     if (filters.priceMax && property.price > parseInt(filters.priceMax)) return false
+    if (filters.category !== 'all' && property.propertyCategory !== filters.category) return false
     if (filters.type !== 'all' && property.type !== filters.type) return false
     if (filters.rooms && property.beds < parseInt(filters.rooms)) return false
     if (filters.area && property.area < parseInt(filters.area)) return false
@@ -283,7 +286,7 @@ function LocationAnnuellePageContent() {
                 Filtres de recherche
               </h3>
               <button
-                onClick={() => setFilters({ location: '', priceMin: '', priceMax: '', type: 'all', rooms: '', area: '' })}
+                onClick={() => setFilters({ location: '', priceMin: '', priceMax: '', type: 'all', category: 'all', rooms: '', area: '' })}
                 className="text-sm font-medium hover:underline"
                 style={{ color: '#41A09C' }}
               >
@@ -304,20 +307,25 @@ function LocationAnnuellePageContent() {
                 />
               </div>
 
-              {/* Type */}
+              {/* Catégorie */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Type de bien</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Catégorie</label>
                 <select
-                  value={filters.type}
-                  onChange={(e) => setFilters({ ...filters, type: e.target.value })}
+                  value={filters.category}
+                  onChange={(e) => setFilters({ ...filters, category: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 >
-                  <option value="all">Tous</option>
-                  <option value="Villa">Villa</option>
-                  <option value="Maison">Maison</option>
-                  <option value="Appartement">Appartement</option>
-                  <option value="Studio">Studio</option>
-                  <option value="Duplex">Duplex</option>
+                  <option value="all">Toutes</option>
+                  <option value="maison">🏠 Maison</option>
+                  <option value="appartement">🏢 Appartement</option>
+                  <option value="villa">🏰 Villa</option>
+                  <option value="terrain">🌳 Terrain</option>
+                  <option value="chambre">🛏️ Chambre</option>
+                  <option value="immeuble">🏛️ Immeuble</option>
+                  <option value="bureau">💼 Bureau</option>
+                  <option value="fond_commerce">🏪 Fond de commerce</option>
+                  <option value="parking">🅿️ Parking</option>
+                  <option value="local_commercial">🏬 Local commercial</option>
                 </select>
               </div>
 
@@ -436,9 +444,18 @@ function LocationAnnuellePageContent() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-bold mb-1 line-clamp-1 group-hover:translate-y-[-2px] transition-transform duration-300">
+                  <h3 className="text-xl font-bold mb-2 line-clamp-1 group-hover:translate-y-[-2px] transition-transform duration-300">
                     {property.title}
                   </h3>
+
+                  {/* Category Badge */}
+                  {property.propertyCategory && (
+                    <div className="mb-2">
+                      <span className={getCategoryBadge(property.propertyCategory).className}>
+                        {getCategoryBadge(property.propertyCategory).label}
+                      </span>
+                    </div>
+                  )}
 
                   {/* Features */}
                   <div className="flex items-center gap-3 text-white/70 text-xs mb-1.5">
@@ -488,7 +505,7 @@ function LocationAnnuellePageContent() {
                 Essayez de modifier vos critères de recherche
               </p>
               <button
-                onClick={() => setFilters({ location: '', priceMin: '', priceMax: '', type: 'all', rooms: '', area: '' })}
+                onClick={() => setFilters({ location: '', priceMin: '', priceMax: '', type: 'all', category: 'all', rooms: '', area: '' })}
                 className="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                 style={{ backgroundColor: '#55E0FF', color: 'white' }}
               >
