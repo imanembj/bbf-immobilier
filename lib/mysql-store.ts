@@ -39,6 +39,7 @@ function convertToCamelCase(obj: any): any {
   if (obj.property_id !== undefined) converted.propertyId = obj.property_id
   if (obj.property_title !== undefined) converted.propertyTitle = obj.property_title
   if (obj.property_type !== undefined) converted.propertyType = obj.property_type
+  if (obj.property_category !== undefined) converted.propertyCategory = obj.property_category
   if (obj.property_address !== undefined) converted.propertyAddress = obj.property_address
   if (obj.property_area !== undefined) converted.propertyArea = obj.property_area
   if (obj.property_rooms !== undefined) converted.propertyRooms = obj.property_rooms
@@ -145,6 +146,7 @@ export async function addProperty(property: Property): Promise<void> {
   const data = {
     id: property.id,
     type: property.type,
+    property_category: (property as any).propertyCategory || 'maison',
     title: property.title,
     location: property.location,
     price: property.price,
@@ -181,6 +183,7 @@ export async function updateProperty(id: string, updates: Partial<Property>): Pr
   
   if (updates.title !== undefined) data.title = updates.title
   if (updates.type !== undefined) data.type = updates.type
+  if ((updates as any).propertyCategory !== undefined) data.property_category = (updates as any).propertyCategory
   if (updates.location !== undefined) data.location = updates.location
   if (updates.price !== undefined) data.price = updates.price
   if (updates.period !== undefined) data.period = updates.period

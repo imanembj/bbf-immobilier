@@ -229,7 +229,7 @@ export default function PropertyForm({ onSubmit, onCancel, initialData }: Proper
       {/* Type de bien */}
       <div className="bg-white rounded-xl shadow-md p-6">
         <h3 className="text-xl font-bold text-gray-900 mb-4">Type de bien</h3>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 mb-6">
           {(['saisonniere', 'annuelle', 'vente'] as PropertyType[]).map((type) => (
             <button
               key={type}
@@ -253,6 +253,30 @@ export default function PropertyForm({ onSubmit, onCancel, initialData }: Proper
               </div>
             </button>
           ))}
+        </div>
+
+        {/* Catégorie de bien */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Catégorie de bien *
+          </label>
+          <select
+            value={formData.propertyCategory || 'maison'}
+            onChange={(e) => setFormData({ ...formData, propertyCategory: e.target.value as any })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+            required
+          >
+            <option value="maison">🏠 Maison</option>
+            <option value="appartement">🏢 Appartement</option>
+            <option value="villa">🏰 Villa</option>
+            <option value="terrain">🌳 Terrain</option>
+            <option value="chambre">🛏️ Chambre</option>
+            <option value="immeuble">🏛️ Immeuble</option>
+            <option value="bureau">💼 Bureau</option>
+            <option value="fond_commerce">🏪 Fond de commerce</option>
+            <option value="parking">🅿️ Parking</option>
+            <option value="local_commercial">🏬 Local commercial</option>
+          </select>
         </div>
       </div>
 

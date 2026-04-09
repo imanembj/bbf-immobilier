@@ -3,6 +3,7 @@ export interface Property {
   id: string
   title: string
   type: 'vente' | 'location' | 'annuelle' | 'saisonniere'
+  propertyCategory?: 'maison' | 'appartement' | 'villa' | 'terrain' | 'chambre' | 'immeuble' | 'bureau' | 'fond_commerce' | 'parking' | 'local_commercial'
   location: string
   price: number
   period?: string
