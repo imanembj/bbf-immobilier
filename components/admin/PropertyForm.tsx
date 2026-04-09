@@ -1691,7 +1691,7 @@ export default function PropertyForm({ onSubmit, onCancel, initialData }: Proper
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Référence du bien *
+              Référence du bien
             </label>
             <input
               type="text"
@@ -1699,7 +1699,6 @@ export default function PropertyForm({ onSubmit, onCancel, initialData }: Proper
               onChange={(e) => updateNestedField('legalInfo', 'reference', e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
               placeholder="Ex: BIM-SAIS-001"
-              required
             />
           </div>
           
@@ -1707,7 +1706,7 @@ export default function PropertyForm({ onSubmit, onCancel, initialData }: Proper
             <>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  DPE *
+                  DPE
                 </label>
                 <input
                   type="text"
@@ -1715,7 +1714,6 @@ export default function PropertyForm({ onSubmit, onCancel, initialData }: Proper
                   onChange={(e) => updateNestedField('legalInfo', 'dpe', e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                   placeholder="Ex: C (120 kWh/m²/an)"
-                  required
                 />
               </div>
               <div>
