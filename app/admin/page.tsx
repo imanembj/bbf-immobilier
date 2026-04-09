@@ -1791,8 +1791,7 @@ export default function AdminDashboard() {
                           <button
                             onClick={async () => {
                               try {
-                                
-                                await adminAPI.toggleBlogPostPin(post.id)
+                                await adminAPI.updateBlogPost(post.id, { isPinned: !post.isPinned })
                                 await loadData()
                                 toast.success(post.isPinned ? 'Article désépinglé' : 'Article épinglé')
                               } catch (error) {
