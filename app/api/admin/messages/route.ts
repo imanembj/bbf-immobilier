@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query, update } from '@/lib/mysql'
+import { update, deleteRow } from '@/lib/mysql'
+import { getMessages } from '@/lib/mysql-store'
 
 export async function GET() {
   try {
-    const sql = 'SELECT * FROM messages ORDER BY created_at DESC'
-    const messages = await query(sql)
+    const messages = await getMessages()
     return NextResponse.json(messages)
   } catch (error) {
     console.error('Error fetching messages:', error)
@@ -25,5 +25,22 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     console.error('Error updating message:', error)
     return NextResponse.json({ error: 'Erreur lors de la mise à jour' }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    
+    if (!id) {
+      return NextResponse.json({ error: 'ID requis' }, { status: 400 })
+    }
+
+    await deleteRow('messages', 'id = ?', [id])
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting message:', error)
+    return NextResponse.json({ error: 'Erreur lors de la suppression' }, { status: 500 })
   }
 }
