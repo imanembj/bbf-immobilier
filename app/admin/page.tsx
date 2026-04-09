@@ -1795,7 +1795,7 @@ export default function AdminDashboard() {
                               ))
                               
                               await adminAPI.updateBlogPost(post.id, { isPublished: newPublished })
-                              toast.success(post.isPublished ? 'Article mis en brouillon' : 'Article publié')
+                              toast.success(newPublished ? 'Article publié' : 'Article mis en brouillon')
                             } catch (error) {
                               await loadData()
                               toast.error('Erreur lors de la mise à jour')

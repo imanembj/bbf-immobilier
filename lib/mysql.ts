@@ -61,13 +61,8 @@ export async function update(
   
   const sql = `UPDATE ${table} SET ${setClause} WHERE ${where}`
   
-  console.log(`[MySQL UPDATE] Table: ${table}`)
-  console.log(`[MySQL UPDATE] SQL: ${sql}`)
-  console.log(`[MySQL UPDATE] Values:`, [...values, ...whereParams])
-  
   try {
     const [result] = await pool.execute(sql, [...values, ...whereParams])
-    console.log(`[MySQL UPDATE] Success:`, result)
     return result
   } catch (error) {
     console.error('MySQL Update Error:', error)
