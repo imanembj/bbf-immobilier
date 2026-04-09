@@ -72,6 +72,29 @@ function convertToCamelCase(obj: any): any {
   if (obj.is_published !== undefined) converted.isPublished = obj.is_published
   if (obj.published_at !== undefined) converted.publishedAt = obj.published_at
   
+  // Parser les JSON pour blog
+  if (obj.tags !== undefined) {
+    try {
+      converted.tags = typeof obj.tags === 'string' ? JSON.parse(obj.tags) : (obj.tags || [])
+    } catch {
+      converted.tags = []
+    }
+  }
+  if (obj.images !== undefined) {
+    try {
+      converted.images = typeof obj.images === 'string' ? JSON.parse(obj.images) : (obj.images || [])
+    } catch {
+      converted.images = []
+    }
+  }
+  if (obj.links !== undefined) {
+    try {
+      converted.links = typeof obj.links === 'string' ? JSON.parse(obj.links) : (obj.links || [])
+    } catch {
+      converted.links = []
+    }
+  }
+  
   return converted
 }
 
