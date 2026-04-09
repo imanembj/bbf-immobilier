@@ -56,7 +56,7 @@ export default function AdminLogin() {
             Administration
           </h1>
           <p className="text-gray-600">
-            Bulle immobilière, Business & Foncier - Espace Sécurisé
+            Espace Sécurisé
           </p>
         </div>
 
@@ -75,7 +75,7 @@ export default function AdminLogin() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@bulle-immobiliere.mq"
+                  placeholder="Email administrateur"
                   required
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 />
