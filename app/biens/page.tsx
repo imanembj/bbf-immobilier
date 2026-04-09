@@ -235,7 +235,7 @@ export default function BiensPage() {
                   <div className="space-y-2">
                     {[
                       { value: 'all', label: 'Tous' },
-                      { value: 'vente', label: 'À Vendre' },
+                      { value: 'vente', label: 'Achat' },
                       { value: 'annuelle', label: 'Location longue durée' },
                       { value: 'saisonniere', label: 'Location saisonnière' },
                     ].map(option => (
