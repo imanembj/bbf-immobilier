@@ -623,16 +623,19 @@ export async function updateBlogPost(id: string, updates: Partial<BlogPost>) {
   if (updates.category !== undefined) data.category = updates.category
   if (updates.tags !== undefined) data.tags = JSON.stringify(updates.tags)
   if (updates.author !== undefined) data.author = updates.author
-  if (updates.isPinned !== undefined) data.is_pinned = updates.isPinned
+  if (updates.isPinned !== undefined) data.is_pinned = updates.isPinned ? 1 : 0
   if (updates.isPublished !== undefined) {
     data.is_published = updates.isPublished ? 1 : 0
-    // Si on publie et qu'il n'y a pas de date de publication, la définir maintenant
+    // Si on publie, définir la date de publication
     if (updates.isPublished) {
       // Récupérer l'article pour vérifier s'il a déjà une published_at
-      const existingPost = await query('SELECT published_at FROM blog_posts WHERE id = ?', [id])
+      const existingPost = await query<any>('SELECT published_at FROM blog_posts WHERE id = ?', [id])
       if (!existingPost[0]?.published_at) {
         data.published_at = new Date().toISOString()
       }
+    } else {
+      // Si on met en brouillon, garder la date de publication (pour historique)
+      // Ne pas la supprimer
     }
   }
   if (updates.publishedAt !== undefined) data.published_at = updates.publishedAt
