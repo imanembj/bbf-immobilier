@@ -31,6 +31,20 @@ export async function PUT(
   }
 }
 
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const updates = await request.json()
+    await MySQLStore.updateProperty(params.id, updates)
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('API Error:', error)
+    return NextResponse.json({ error: 'Failed to update property' }, { status: 500 })
+  }
+}
+
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }

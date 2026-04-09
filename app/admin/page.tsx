@@ -948,11 +948,14 @@ export default function AdminDashboard() {
                           {/* Toggle Brouillon/Publié */}
                           <button 
                             onClick={async () => {
-                              const newStatus = property.status === 'brouillon' ? 'disponible' : 'brouillon'
-                              
-                              await adminAPI.updateProperty(property.id, { status: newStatus })
-                              toast.success(newStatus === 'brouillon' ? 'Bien mis en brouillon' : 'Bien publié')
-                              loadData()
+                              try {
+                                const newStatus = property.status === 'brouillon' ? 'disponible' : 'brouillon'
+                                await adminAPI.updateProperty(property.id, { status: newStatus })
+                                await loadData()
+                                toast.success(newStatus === 'brouillon' ? 'Bien mis en brouillon' : 'Bien publié')
+                              } catch (error) {
+                                toast.error('Erreur lors de la mise à jour')
+                              }
                             }}
                             className={`p-2 rounded-lg transition-colors ${
                               property.status === 'brouillon'
