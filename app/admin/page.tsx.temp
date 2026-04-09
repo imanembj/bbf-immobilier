@@ -34,7 +34,6 @@ import {
   Pin
 } from 'lucide-react'
 // Utilisation directe de MySQL via API routes - plus de localStorage
-import { adminAPI } from '@/lib/admin-api'
 import { Property, Booking, Message, Review, Partner, FAQ, ClientRequest, BlogPost } from '@/lib/data'
 import toast from 'react-hot-toast'
 import PropertyForm from '@/components/admin/PropertyForm'
@@ -246,8 +245,8 @@ export default function AdminDashboard() {
 
   const handleUpdateReviewStatus = async (id: string, status: Review['status']) => {
     try {
-      
-      await adminAPI.updateReview(id, { status })
+      const store = getStore()
+      store.updateReview(id, { status })
       await loadData()
       toast.success('Avis mis à jour')
     } catch (error) {
@@ -267,8 +266,8 @@ export default function AdminDashboard() {
     }
 
     try {
-      
-      await adminAPI.updateReview(respondingReview.id, {
+      const store = getStore()
+      store.updateReview(respondingReview.id, {
         response: reviewResponse,
         respondedAt: new Date(),
       })
@@ -284,8 +283,8 @@ export default function AdminDashboard() {
   const handleDeleteReview = async (id: string) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet avis ?')) {
       try {
-        
-        await adminAPI.deleteReview(id)
+        const store = getStore()
+        store.deleteReview(id)
         await loadData()
         toast.success('Avis supprimé')
       } catch (error) {
@@ -432,8 +431,8 @@ export default function AdminDashboard() {
   const handleResetData = () => {
     const confirmation = window.prompt('Cette action est IRRÉVERSIBLE. Tapez "SUPPRIMER TOUT" pour confirmer')
     if (confirmation === 'SUPPRIMER TOUT') {
-      
-      // clearAllData removed - use MySQL()
+      const store = getStore()
+      store.clearAllData()
       loadData()
       toast.success('Toutes les données ont été réinitialisées')
     } else {
@@ -455,8 +454,8 @@ export default function AdminDashboard() {
   // Gestion des Partenaires
   const handleAddPartner = async (partner: Omit<Partner, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
-      
-      await adminAPI.addPartner(partner)
+      const store = getStore()
+      store.addPartner(partner)
       await loadData()
       setEditingPartner(null)
       toast.success('Partenaire ajouté avec succès ! 🎉')
@@ -467,8 +466,8 @@ export default function AdminDashboard() {
 
   const handleUpdatePartner = async (id: string, updates: Partial<Partner>) => {
     try {
-      
-      await adminAPI.updatePartner(id, updates)
+      const store = getStore()
+      store.updatePartner(id, updates)
       await loadData()
       setEditingPartner(null)
       setShowPartnerForm(false)
@@ -481,8 +480,8 @@ export default function AdminDashboard() {
   const handleDeletePartner = async (id: string) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce partenaire ?')) {
       try {
-        
-        await adminAPI.deletePartner(id)
+        const store = getStore()
+        store.deletePartner(id)
         await loadData()
         toast.success('Partenaire supprimé')
       } catch (error) {
@@ -493,8 +492,8 @@ export default function AdminDashboard() {
 
   const handleTogglePartner = async (id: string, actif: boolean) => {
     try {
-      
-      await adminAPI.updatePartner(id, { actif: !actif })
+      const store = getStore()
+      store.updatePartner(id, { actif: !actif })
       await loadData()
       toast.success(actif ? 'Partenaire désactivé' : 'Partenaire activé')
     } catch (error) {
@@ -513,9 +512,9 @@ export default function AdminDashboard() {
     const targetOrdre = partners[newIndex].ordre
 
     try {
-      
-      await adminAPI.updatePartner(partners[currentIndex].id, { ordre: targetOrdre })
-      await adminAPI.updatePartner(partners[newIndex].id, { ordre: currentOrdre })
+      const store = getStore()
+      store.updatePartner(partners[currentIndex].id, { ordre: targetOrdre })
+      store.updatePartner(partners[newIndex].id, { ordre: currentOrdre })
       await loadData()
     } catch (error) {
       toast.error('Erreur lors du déplacement')
@@ -525,8 +524,8 @@ export default function AdminDashboard() {
   // Gestion des FAQs
   const handleAddFaq = async (faq: Omit<FAQ, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
-      
-      await adminAPI.addFAQ(faq)
+      const store = getStore()
+      store.addFAQ(faq)
       await loadData()
       setShowFaqForm(false)
       toast.success('FAQ ajoutée avec succès ! 🎉')
@@ -537,8 +536,8 @@ export default function AdminDashboard() {
 
   const handleUpdateFaq = async (id: string, updates: Partial<FAQ>) => {
     try {
-      
-      await adminAPI.updateFAQ(id, updates)
+      const store = getStore()
+      store.updateFAQ(id, updates)
       await loadData()
       setEditingFaq(null)
       setShowFaqForm(false)
@@ -551,8 +550,8 @@ export default function AdminDashboard() {
   const handleDeleteFaq = async (id: string) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette FAQ ?')) {
       try {
-        
-        await adminAPI.deleteFAQ(id)
+        const store = getStore()
+        store.deleteFAQ(id)
         await loadData()
         toast.success('FAQ supprimée avec succès')
       } catch (error) {
@@ -563,8 +562,8 @@ export default function AdminDashboard() {
 
   const handleToggleFaq = async (id: string, actif: boolean) => {
     try {
-      
-      await adminAPI.updateFAQ(id, { actif: !actif })
+      const store = getStore()
+      store.updateFAQ(id, { actif: !actif })
       await loadData()
       toast.success(actif ? 'FAQ désactivée' : 'FAQ activée')
     } catch (error) {
@@ -583,9 +582,9 @@ export default function AdminDashboard() {
     const targetOrdre = faqs[newIndex].ordre
 
     try {
-      
-      await adminAPI.updateFAQ(faqs[currentIndex].id, { ordre: targetOrdre })
-      await adminAPI.updateFAQ(faqs[newIndex].id, { ordre: currentOrdre })
+      const store = getStore()
+      store.updateFAQ(faqs[currentIndex].id, { ordre: targetOrdre })
+      store.updateFAQ(faqs[newIndex].id, { ordre: currentOrdre })
       await loadData()
     } catch (error) {
       toast.error('Erreur lors du déplacement')
@@ -595,8 +594,8 @@ export default function AdminDashboard() {
   // Blog Post handlers
   const handleAddBlogPost = async (data: Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt' | 'views'>) => {
     try {
-      
-      await adminAPI.addBlogPost(data)
+      const store = getStore()
+      store.addBlogPost(data)
       await loadData()
       setShowBlogForm(false)
       toast.success('Article créé avec succès ! 🎉')
@@ -608,8 +607,8 @@ export default function AdminDashboard() {
   const handleUpdateBlogPost = async (data: Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt' | 'views'>) => {
     if (!editingBlogPost) return
     try {
-      
-      await adminAPI.updateBlogPost(editingBlogPost.id, data)
+      const store = getStore()
+      store.updateBlogPost(editingBlogPost.id, data)
       await loadData()
       setEditingBlogPost(null)
       setShowBlogForm(false)
@@ -654,8 +653,8 @@ export default function AdminDashboard() {
         updated_at: new Date().toISOString(),
       }
       
-      
-      await adminAPI.addProperty(newProperty)
+      const store = getStore()
+      store.addProperty(newProperty)
       await loadData()
       setShowPropertyForm(false)
       setEditingProperty(null)
@@ -700,8 +699,8 @@ export default function AdminDashboard() {
         legalInfo: data.legalInfo,
       }
       
-      
-      await adminAPI.updateProperty(editingProperty.id, updatedProperty)
+      const store = getStore()
+      store.updateProperty(editingProperty.id, updatedProperty)
       await loadData()
       setShowPropertyForm(false)
       setEditingProperty(null)
@@ -949,8 +948,8 @@ export default function AdminDashboard() {
                           <button 
                             onClick={async () => {
                               const newStatus = property.status === 'brouillon' ? 'disponible' : 'brouillon'
-                              
-                              await adminAPI.updateProperty(property.id, { status: newStatus })
+                              const store = getStore()
+                              store.updateProperty(property.id, { status: newStatus })
                               toast.success(newStatus === 'brouillon' ? 'Bien mis en brouillon' : 'Bien publié')
                               loadData()
                             }}
@@ -1102,8 +1101,8 @@ export default function AdminDashboard() {
                       onClick={async (e) => {
                         e.stopPropagation()
                         try {
-                          
-                          await adminAPI.updateMessage(message.id, { status: 'repondu' })
+                          const store = getStore()
+                          store.updateMessage(message.id, { status: 'repondu' })
                           await loadData()
                           toast.success('Marqué comme répondu')
                         } catch (error) {
@@ -1760,8 +1759,8 @@ export default function AdminDashboard() {
                         <button
                           onClick={async () => {
                             try {
-                              
-                              await adminAPI.updateBlogPost(post.id, { isPublished: !post.isPublished })
+                              const store = getStore()
+                              store.updateBlogPost(post.id, { isPublished: !post.isPublished })
                               await loadData()
                               toast.success(post.isPublished ? 'Article mis en brouillon' : 'Article publié')
                             } catch (error) {
@@ -1788,8 +1787,8 @@ export default function AdminDashboard() {
                           <button
                             onClick={async () => {
                               try {
-                                
-                                await adminAPI.toggleBlogPostPin(post.id)
+                                const store = getStore()
+                                store.toggleBlogPostPin(post.id)
                                 await loadData()
                                 toast.success(post.isPinned ? 'Article désépinglé' : 'Article épinglé')
                               } catch (error) {
@@ -1827,8 +1826,8 @@ export default function AdminDashboard() {
                             onClick={async () => {
                               if (confirm('Supprimer cet article ?')) {
                                 try {
-                                  
-                                  await adminAPI.deleteBlogPost(post.id)
+                                  const store = getStore()
+                                  store.deleteBlogPost(post.id)
                                   await loadData()
                                   toast.success('Article supprimé')
                                 } catch (error) {
@@ -1980,8 +1979,8 @@ export default function AdminDashboard() {
                           value={request.status}
                           onChange={async (e) => {
                             try {
-                              
-                              await adminAPI.updateClientRequest(request.id, { status: e.target.value as any })
+                              const store = getStore()
+                              store.updateClientRequest(request.id, { status: e.target.value as any })
                               await loadData()
                               toast.success('Statut mis à jour')
                             } catch (error) {
@@ -2006,8 +2005,8 @@ export default function AdminDashboard() {
                           onClick={async () => {
                             if (confirm('Supprimer cette demande ?')) {
                               try {
-                                
-                                await adminAPI.deleteClientRequest(request.id)
+                                const store = getStore()
+                                store.deleteClientRequest(request.id)
                                 await loadData()
                                 toast.success('Demande supprimée')
                               } catch (error) {
