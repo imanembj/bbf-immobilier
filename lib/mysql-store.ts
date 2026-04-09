@@ -626,6 +626,7 @@ export async function updateBlogPost(id: string, updates: Partial<BlogPost>) {
   if (updates.isPinned !== undefined) data.is_pinned = updates.isPinned ? 1 : 0
   if (updates.isPublished !== undefined) {
     data.is_published = updates.isPublished ? 1 : 0
+    console.log(`[updateBlogPost] Setting is_published to ${data.is_published} for post ${id}`)
     // Si on publie, définir la date de publication
     if (updates.isPublished) {
       // Récupérer l'article pour vérifier s'il a déjà une published_at
@@ -635,12 +636,14 @@ export async function updateBlogPost(id: string, updates: Partial<BlogPost>) {
       }
     } else {
       // Si on met en brouillon, garder la date de publication (pour historique)
-      // Ne pas la supprimer
+      console.log(`[updateBlogPost] Setting post ${id} to draft (is_published=0)`)
     }
   }
   if (updates.publishedAt !== undefined) data.published_at = updates.publishedAt
   
+  console.log(`[updateBlogPost] Final data to update:`, data)
   await update('blog_posts', data, 'id = ?', [id])
+  console.log(`[updateBlogPost] Update completed for post ${id}`)
 }
 
 export async function deleteBlogPost(id: string) {
