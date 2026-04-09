@@ -14,9 +14,17 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
+    
+    // Calculer le prochain ordre disponible
+    const existingPartners = await getPartners()
+    const maxOrdre = existingPartners.length > 0 
+      ? Math.max(...existingPartners.map(p => p.ordre || 0))
+      : 0
+    
     const newPartner = {
       id: Date.now().toString(),
       ...data,
+      ordre: data.ordre !== undefined ? data.ordre : maxOrdre + 1, // Utiliser l'ordre fourni ou calculer le suivant
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }

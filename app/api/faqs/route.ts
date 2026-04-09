@@ -14,9 +14,17 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
+    
+    // Calculer le prochain ordre disponible
+    const existingFAQs = await getFAQs()
+    const maxOrdre = existingFAQs.length > 0 
+      ? Math.max(...existingFAQs.map(f => f.ordre || 0))
+      : 0
+    
     const newFAQ = {
       id: Date.now().toString(),
       ...data,
+      ordre: data.ordre !== undefined ? data.ordre : maxOrdre + 1, // Utiliser l'ordre fourni ou calculer le suivant
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }
