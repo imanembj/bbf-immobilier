@@ -1113,7 +1113,6 @@ export default function AdminDashboard() {
                       onClick={async (e) => {
                         e.stopPropagation()
                         try {
-                          
                           await adminAPI.updateMessage(message.id, { status: 'repondu' })
                           await loadData()
                           toast.success('Marqué comme répondu')
@@ -1124,6 +1123,23 @@ export default function AdminDashboard() {
                       className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700"
                     >
                       Marquer comme répondu
+                    </button>
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation()
+                        if (confirm('Supprimer ce message ?')) {
+                          try {
+                            await adminAPI.deleteMessage(message.id)
+                            setMessages(prev => prev.filter(m => m.id !== message.id))
+                            toast.success('Message supprimé')
+                          } catch (error) {
+                            toast.error('Erreur lors de la suppression')
+                          }
+                        }
+                      }}
+                      className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                    >
+                      Supprimer
                     </button>
                   </div>
                 </div>

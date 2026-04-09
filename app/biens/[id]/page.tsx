@@ -104,17 +104,21 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
         }
         setLoading(false)
         
-        // TODO: Charger les avis depuis l'API
-        // const reviewsResponse = await fetch(`/api/reviews?propertyId=${params.id}`)
-        // const allReviews = await reviewsResponse.json()
-        // setReviews(allReviews)
-        
-        // Calculer la note moyenne
-        // const approvedReviews = allReviews.filter((r: any) => r.status === 'approuve')
-        // if (approvedReviews.length > 0) {
-        //   const avgRating = approvedReviews.reduce((sum: number, r: any) => sum + r.rating, 0) / approvedReviews.length
-        //   setPropertyRating({ rating: avgRating, count: approvedReviews.length })
-        // }
+        // Charger les avis depuis l'API
+        try {
+          const reviewsResponse = await fetch(`/api/reviews?propertyId=${params.id}`)
+          const allReviews = await reviewsResponse.json()
+          setReviews(allReviews)
+          
+          // Calculer la note moyenne
+          const approvedReviews = allReviews.filter((r: any) => r.status === 'approuve')
+          if (approvedReviews.length > 0) {
+            const avgRating = approvedReviews.reduce((sum: number, r: any) => sum + r.rating, 0) / approvedReviews.length
+            setPropertyRating({ rating: avgRating, count: approvedReviews.length })
+          }
+        } catch (error) {
+          console.error('Error loading reviews:', error)
+        }
       } catch (error) {
         console.error('Error loading property:', error)
         setLoading(false)
@@ -486,22 +490,25 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
     }
 
     try {
-      // TODO: Créer une API route pour ajouter un avis
-      // const response = await fetch('/api/reviews', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     property_id: params.id,
-      //     name: newReview.name,
-      //     email: newReview.email,
-      //     rating: newReview.rating,
-      //     comment: newReview.comment,
-      //   })
-      // })
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          propertyId: params.id,
+          name: newReview.name,
+          email: newReview.email,
+          rating: newReview.rating,
+          comment: newReview.comment,
+        })
+      })
       
-      toast.success('Merci pour votre avis ! Il sera publié après modération.')
-      setShowReviewForm(false)
-      setNewReview({ name: '', email: '', rating: 5, comment: '' })
+      if (response.ok) {
+        toast.success('Merci pour votre avis ! Il sera publié après modération.')
+        setShowReviewForm(false)
+        setNewReview({ name: '', email: '', rating: 5, comment: '' })
+      } else {
+        toast.error('Erreur lors de l\'envoi')
+      }
     } catch (error) {
       toast.error('Erreur lors de l\'envoi de votre avis')
     }

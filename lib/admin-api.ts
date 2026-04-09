@@ -150,6 +150,14 @@ export const adminAPI = {
     return res.json()
   },
 
+  async deleteMessage(id: string) {
+    const res = await fetch(`/api/admin/messages?id=${id}`, {
+      method: 'DELETE',
+    })
+    if (!res.ok) throw new Error('Failed to delete message')
+    return res.json()
+  },
+
   // Client Requests
   async updateClientRequest(id: string, updates: any) {
     const res = await fetch('/api/requests', {
