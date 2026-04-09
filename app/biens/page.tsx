@@ -7,6 +7,7 @@ import { MapPin, Bed, Bath, Maximize, Heart, Search, SlidersHorizontal } from 'l
 import { AnimatedText } from '@/components/animations'
 import { useFavorites } from '@/lib/favorites'
 import toast from 'react-hot-toast'
+import { getCategoryBadge } from '@/lib/property-category'
 
 // Helper pour afficher le prix dans les cartes
 const getCardPriceDisplay = (property: any): { price: string, period: string } => {
@@ -71,6 +72,7 @@ export default function BiensPage() {
   
   const [filters, setFilters] = useState({
     type: 'all',
+    category: 'all',
     location: '',
     priceMin: '',
     priceMax: '',
@@ -159,6 +161,7 @@ export default function BiensPage() {
 
   const filteredProperties = properties.filter(property => {
     if (filters.type !== 'all' && property.type !== filters.type) return false
+    if (filters.category !== 'all' && property.propertyCategory !== filters.category) return false
     if (filters.location && !property.location.toLowerCase().includes(filters.location.toLowerCase())) return false
     if (filters.priceMin && property.price < parseInt(filters.priceMin)) return false
     if (filters.priceMax && property.price > parseInt(filters.priceMax)) return false
@@ -264,6 +267,31 @@ export default function BiensPage() {
                     placeholder="Ville, quartier..."
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
+                </div>
+
+                {/* Catégorie */}
+                <div>
+                  <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Catégorie
+                  </label>
+                  <select
+                    id="category"
+                    value={filters.category}
+                    onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  >
+                    <option value="all">Toutes</option>
+                    <option value="maison">🏠 Maison</option>
+                    <option value="appartement">🏢 Appartement</option>
+                    <option value="villa">🏰 Villa</option>
+                    <option value="terrain">🌳 Terrain</option>
+                    <option value="chambre">🛏️ Chambre</option>
+                    <option value="immeuble">🏛️ Immeuble</option>
+                    <option value="bureau">💼 Bureau</option>
+                    <option value="fond_commerce">🏪 Fond de commerce</option>
+                    <option value="parking">🅿️ Parking</option>
+                    <option value="local_commercial">🏬 Local commercial</option>
+                  </select>
                 </div>
 
                 {/* Price Range */}
@@ -441,9 +469,18 @@ export default function BiensPage() {
                       </div>
 
                       {/* Title */}
-                      <h3 className="text-xl font-bold line-clamp-1 group-hover:translate-y-[-2px] transition-transform duration-300 mb-1">
+                      <h3 className="text-xl font-bold line-clamp-1 group-hover:translate-y-[-2px] transition-transform duration-300 mb-2">
                         {property.title}
                       </h3>
+
+                      {/* Category Badge */}
+                      {property.propertyCategory && (
+                        <div className="mb-2">
+                          <span className={getCategoryBadge(property.propertyCategory).className}>
+                            {getCategoryBadge(property.propertyCategory).label}
+                          </span>
+                        </div>
+                      )}
 
                       {/* Features */}
                       <div className="flex items-center gap-3 text-white/70 text-xs mb-1.5">

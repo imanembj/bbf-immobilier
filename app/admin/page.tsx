@@ -627,6 +627,7 @@ export default function AdminDashboard() {
         id: Date.now().toString(),
         title: data.title,
         type: data.type,
+        propertyCategory: data.propertyCategory || 'maison',
         location: data.location,
         price: data.price,
         period: data.period,
@@ -675,6 +676,7 @@ export default function AdminDashboard() {
       const updatedProperty: any = {
         title: data.title,
         type: data.type,
+        propertyCategory: data.propertyCategory,
         location: data.location,
         price: data.price,
         period: data.period,
