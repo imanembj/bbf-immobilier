@@ -6,6 +6,19 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    // Classes pour les badges de catégories
+    'bg-blue-100', 'text-blue-800',
+    'bg-purple-100', 'text-purple-800',
+    'bg-pink-100', 'text-pink-800',
+    'bg-green-100', 'text-green-800',
+    'bg-indigo-100', 'text-indigo-800',
+    'bg-gray-100', 'text-gray-800',
+    'bg-cyan-100', 'text-cyan-800',
+    'bg-orange-100', 'text-orange-800',
+    'bg-yellow-100', 'text-yellow-800',
+    'bg-red-100', 'text-red-800',
+  ],
   theme: {
     extend: {
       colors: {
