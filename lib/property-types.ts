@@ -104,6 +104,7 @@ export interface PricingInfo {
 export interface CompleteProperty {
   id: string
   type: PropertyType
+  propertyCategory?: 'maison' | 'appartement' | 'villa' | 'terrain' | 'chambre' | 'immeuble' | 'bureau' | 'fond_commerce' | 'parking' | 'local_commercial'
   title: string
   location: string
   price: number // Prix principal (pour compatibilité)
