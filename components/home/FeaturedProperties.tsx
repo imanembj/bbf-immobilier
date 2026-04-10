@@ -6,6 +6,7 @@ import { MapPin, Bed, Bath, Maximize, Heart, Calendar } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useFavorites } from '@/lib/favorites'
 import toast from 'react-hot-toast'
+import { getCategoryBadge } from '@/lib/property-category'
 
 // Helper pour afficher le prix dans les cartes
 const getCardPriceDisplay = (property: any): { price: string, period: string } => {
@@ -217,21 +218,6 @@ export default function FeaturedProperties() {
                   <span className="bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-medium px-3 py-1 rounded-full">
                     {property.type === 'vente' ? 'Vente' : property.type === 'annuelle' ? 'Annuelle' : 'Saisonnière'}
                   </span>
-                  {property.propertyCategory && (
-                    <span className="bg-gradient-to-r from-purple-500/80 to-pink-500/80 backdrop-blur-md border border-white/30 text-white text-xs font-medium px-3 py-1 rounded-full">
-                      {property.propertyCategory === 'maison' ? '🏠 Maison' :
-                       property.propertyCategory === 'appartement' ? '🏢 Appartement' :
-                       property.propertyCategory === 'villa' ? '🏡 Villa' :
-                       property.propertyCategory === 'terrain' ? '🌳 Terrain' :
-                       property.propertyCategory === 'chambre' ? '🛏️ Chambre' :
-                       property.propertyCategory === 'immeuble' ? '🏛️ Immeuble' :
-                       property.propertyCategory === 'bureau' ? '💼 Bureau' :
-                       property.propertyCategory === 'fond_commerce' ? '🏪 Fond de commerce' :
-                       property.propertyCategory === 'parking' ? '🅿️ Parking' :
-                       property.propertyCategory === 'local_commercial' ? '🏬 Local commercial' :
-                       property.propertyCategory}
-                    </span>
-                  )}
                 </div>
 
                 {/* Favorite Button */}
@@ -280,6 +266,15 @@ export default function FeaturedProperties() {
                 <h3 className="text-xl font-bold mb-1 line-clamp-1 group-hover:translate-y-[-2px] transition-transform duration-300">
                   {property.title}
                 </h3>
+
+                {/* Category Badge */}
+                {property.propertyCategory && (
+                  <div className="mb-2">
+                    <span className={getCategoryBadge(property.propertyCategory).className}>
+                      {getCategoryBadge(property.propertyCategory).label}
+                    </span>
+                  </div>
+                )}
 
                 {/* Features */}
                 <div className="flex items-center gap-3 text-white/70 text-xs mb-1.5">
