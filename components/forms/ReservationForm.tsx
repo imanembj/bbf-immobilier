@@ -93,6 +93,7 @@ export default function ReservationForm({
     children: '0',
     reservationMessage: '',
   })
+  const [childrenAges, setChildrenAges] = useState<number[]>([])
   const [includeCleaningFee, setIncludeCleaningFee] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -109,6 +110,7 @@ export default function ReservationForm({
           propertyTitle,
           adults,
           children,
+          childrenAges: property?.type === 'saisonniere' ? childrenAges : undefined,
           subtotal,
           cleaningFee,
           touristTax,
@@ -132,6 +134,7 @@ export default function ReservationForm({
           children: '0',
           reservationMessage: '',
         })
+        setChildrenAges([])
         onSuccess?.()
       } else {
         toast.error(data.error || 'Une erreur est survenue')
@@ -145,10 +148,34 @@ export default function ReservationForm({
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }))
+    
+    // Si le nombre d'enfants change, ajuster le tableau des âges
+    if (name === 'children') {
+      const numChildren = parseInt(value) || 0
+      setChildrenAges(prev => {
+        const newAges = [...prev]
+        // Ajouter des âges par défaut (0) si on augmente
+        while (newAges.length < numChildren) {
+          newAges.push(0)
+        }
+        // Supprimer les âges en trop si on diminue
+        return newAges.slice(0, numChildren)
+      })
+    }
+  }
+  
+  const handleChildAgeChange = (index: number, age: number) => {
+    setChildrenAges(prev => {
+      const newAges = [...prev]
+      newAges[index] = age
+      return newAges
+    })
   }
 
   // Calculer le nombre de nuits
@@ -275,6 +302,36 @@ export default function ReservationForm({
             </select>
           </div>
         </div>
+
+        {/* Âges des enfants - Afficher uniquement si property.type === 'saisonniere' et qu'il y a des enfants */}
+        {property?.type === 'saisonniere' && children > 0 && (
+          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <p className="text-sm font-semibold text-gray-700 mb-3">
+              Âge de chaque enfant <span className="text-red-500">*</span>
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {Array.from({ length: children }).map((_, index) => (
+                <div key={index}>
+                  <label className="block text-xs text-gray-600 mb-1">
+                    Enfant {index + 1}
+                  </label>
+                  <select
+                    value={childrenAges[index] || 0}
+                    onChange={(e) => handleChildAgeChange(index, parseInt(e.target.value))}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-sm"
+                  >
+                    {Array.from({ length: 18 }, (_, i) => i).map(age => (
+                      <option key={age} value={age}>
+                        {age} {age === 0 ? 'an' : age === 1 ? 'an' : 'ans'}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
