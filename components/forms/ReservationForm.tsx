@@ -522,13 +522,28 @@ export default function ReservationForm({
 
       <button
         type="submit"
-        disabled={loading}
-        className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 text-white py-3 rounded-lg font-semibold hover:from-cyan-700 hover:to-teal-700 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={loading || !!availabilityError}
+        onClick={(e) => {
+          if (availabilityError) {
+            e.preventDefault()
+            toast.error('Ces dates ne sont pas disponibles. Veuillez choisir d\'autres dates.')
+          }
+        }}
+        className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+          availabilityError 
+            ? 'bg-gray-400 cursor-not-allowed' 
+            : 'bg-gradient-to-r from-cyan-600 to-teal-600 text-white hover:from-cyan-700 hover:to-teal-700'
+        }`}
       >
         {loading ? (
           <>
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
             Envoi en cours...
+          </>
+        ) : availabilityError ? (
+          <>
+            <AlertCircle className="w-5 h-5" />
+            Dates non disponibles
           </>
         ) : (
           <>
