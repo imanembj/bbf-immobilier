@@ -216,6 +216,21 @@ export default function FeaturedProperties() {
                   <span className="bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-medium px-3 py-1 rounded-full">
                     {property.type === 'vente' ? 'Vente' : property.type === 'annuelle' ? 'Annuelle' : 'Saisonnière'}
                   </span>
+                  {property.propertyCategory && (
+                    <span className="bg-gradient-to-r from-purple-500/80 to-pink-500/80 backdrop-blur-md border border-white/30 text-white text-xs font-medium px-3 py-1 rounded-full">
+                      {property.propertyCategory === 'maison' ? '🏠 Maison' :
+                       property.propertyCategory === 'appartement' ? '🏢 Appartement' :
+                       property.propertyCategory === 'villa' ? '🏡 Villa' :
+                       property.propertyCategory === 'terrain' ? '🌳 Terrain' :
+                       property.propertyCategory === 'chambre' ? '🛏️ Chambre' :
+                       property.propertyCategory === 'immeuble' ? '🏛️ Immeuble' :
+                       property.propertyCategory === 'bureau' ? '💼 Bureau' :
+                       property.propertyCategory === 'fond_commerce' ? '🏪 Fond de commerce' :
+                       property.propertyCategory === 'parking' ? '🅿️ Parking' :
+                       property.propertyCategory === 'local_commercial' ? '🏬 Local commercial' :
+                       property.propertyCategory}
+                    </span>
+                  )}
                 </div>
 
                 {/* Favorite Button */}
