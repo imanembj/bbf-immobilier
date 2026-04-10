@@ -1359,6 +1359,21 @@ export default function PropertyForm({ onSubmit, onCancel, initialData }: Proper
               placeholder="Ex: Annulation gratuite jusqu'à 30 jours avant..."
             />
           </div>
+          <div className="mb-4">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              📅 Lien Google Agenda (calendrier de disponibilité)
+            </label>
+            <input
+              type="url"
+              value={(formData.rentalConditions as any)?.googleCalendarUrl || ''}
+              onChange={(e) => updateNestedField('rentalConditions', 'googleCalendarUrl', e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+              placeholder="https://calendar.google.com/calendar/embed?src=..."
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Collez l'URL d'intégration de votre Google Agenda pour afficher les disponibilités en temps réel
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">

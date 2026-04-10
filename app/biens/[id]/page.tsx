@@ -1309,6 +1309,26 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
               </div>
             )}
 
+            {/* Calendrier Google - LOCATION SAISONNIÈRE */}
+            {property.type === 'saisonniere' && property.rentalConditions?.googleCalendarUrl && (
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  📅 Disponibilités en temps réel
+                </h2>
+                <div className="w-full overflow-hidden rounded-lg border border-gray-200">
+                  <iframe
+                    src={property.rentalConditions.googleCalendarUrl}
+                    className="w-full h-[600px] border-0"
+                    frameBorder="0"
+                    scrolling="no"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 mt-3 text-center">
+                  Les dates grisées ou marquées sont déjà réservées
+                </p>
+              </div>
+            )}
+
             {/* Conditions - LOCATION LONGUE DURÉE - N'afficher que si les données existent */}
             {property.type === 'annuelle' && property.rentalConditions && (
               <div className="bg-white rounded-xl shadow-md p-6">
