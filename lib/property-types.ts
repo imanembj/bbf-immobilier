@@ -114,6 +114,7 @@ export interface CompleteProperty {
   images: string[]
   videoUrl?: string // URL YouTube de présentation du bien
   virtualTourUrl?: string // URL de la visite virtuelle (Matterport, etc.)
+  googleCalendarUrl?: string // URL Google Calendar pour les disponibilités
   rooms: number // Nombre de pièces (F2, F3, F4...)
   beds: number // Nombre de chambres
   baths: number
