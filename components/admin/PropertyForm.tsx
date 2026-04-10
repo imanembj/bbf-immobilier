@@ -104,13 +104,18 @@ export default function PropertyForm({ onSubmit, onCancel, initialData }: Proper
 
   // Mettre à jour un champ imbriqué
   const updateNestedField = (parent: string, field: string, value: any) => {
-    setFormData(prev => ({
-      ...prev,
-      [parent]: {
-        ...(prev[parent as keyof typeof prev] as any),
-        [field]: value,
-      },
-    }))
+    console.log('🔍 updateNestedField:', parent, field, value)
+    setFormData(prev => {
+      const updated = {
+        ...prev,
+        [parent]: {
+          ...(prev[parent as keyof typeof prev] as any),
+          [field]: value,
+        },
+      }
+      console.log('🔍 formData après update:', updated[parent as keyof typeof updated])
+      return updated
+    })
   }
 
   // Ajouter un élément à un tableau
@@ -1365,8 +1370,8 @@ export default function PropertyForm({ onSubmit, onCancel, initialData }: Proper
             </label>
             <input
               type="url"
-              value={(formData.rentalConditions as any)?.googleCalendarUrl || ''}
-              onChange={(e) => updateNestedField('rentalConditions', 'googleCalendarUrl', e.target.value)}
+              value={(formData as any).googleCalendarUrl || ''}
+              onChange={(e) => updateField('googleCalendarUrl', e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
               placeholder="https://calendar.google.com/calendar/embed?src=..."
             />

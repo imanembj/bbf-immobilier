@@ -60,6 +60,7 @@ function convertToCamelCase(obj: any): any {
   if (obj.admin_notes !== undefined) converted.adminNotes = obj.admin_notes
   if (obj.video_url !== undefined) converted.videoUrl = obj.video_url
   if (obj.virtual_tour_url !== undefined) converted.virtualTourUrl = obj.virtual_tour_url
+  if (obj.google_calendar_url !== undefined) converted.googleCalendarUrl = obj.google_calendar_url
   // Utiliser les versions PARSÉES (converted.xxx) au lieu des originales (obj.xxx)
   if (converted.detailed_description !== undefined) converted.detailedDescription = converted.detailed_description
   if (converted.rental_conditions !== undefined) converted.rentalConditions = converted.rental_conditions
@@ -166,6 +167,7 @@ export async function addProperty(property: Property): Promise<void> {
     images: typeof property.images === 'string' ? property.images : JSON.stringify(property.images),
     video_url: (property as any).videoUrl || null,
     virtual_tour_url: (property as any).virtualTourUrl || null,
+    google_calendar_url: (property as any).googleCalendarUrl || null,
     features: typeof property.features === 'string' ? property.features : JSON.stringify(property.features),
     amenities: typeof property.amenities === 'string' ? property.amenities : JSON.stringify(property.amenities),
     rules: typeof (property as any).rules === 'string' ? (property as any).rules : JSON.stringify((property as any).rules || []),
@@ -202,6 +204,7 @@ export async function updateProperty(id: string, updates: Partial<Property>): Pr
   if (updates.images !== undefined) data.images = typeof updates.images === 'string' ? updates.images : JSON.stringify(updates.images)
   if (updates.videoUrl !== undefined) data.video_url = updates.videoUrl
   if (updates.virtualTourUrl !== undefined) data.virtual_tour_url = updates.virtualTourUrl
+  if ((updates as any).googleCalendarUrl !== undefined) data.google_calendar_url = (updates as any).googleCalendarUrl
   if (updates.features !== undefined) data.features = typeof updates.features === 'string' ? updates.features : JSON.stringify(updates.features)
   if (updates.amenities !== undefined) data.amenities = typeof updates.amenities === 'string' ? updates.amenities : JSON.stringify(updates.amenities)
   if ((updates as any).rules !== undefined) data.rules = typeof (updates as any).rules === 'string' ? (updates as any).rules : JSON.stringify((updates as any).rules)
@@ -221,12 +224,15 @@ export async function updateProperty(id: string, updates: Partial<Property>): Pr
   console.log('🔍 updateProperty - rentalConditions:', updates.rentalConditions)
   console.log('🔍 updateProperty - data.rental_conditions:', data.rental_conditions)
   console.log('🔍 updateProperty - Nombre de champs à mettre à jour:', Object.keys(data).length)
+  console.log('🔍 updateProperty - Tous les champs:', Object.keys(data))
   
   try {
     const result = await update('properties', data, 'id = ?', [id])
     console.log('✅ updateProperty - Résultat:', result)
   } catch (error) {
-    console.error('❌ updateProperty - Erreur:', error)
+    console.error('❌ updateProperty - Erreur complète:', error)
+    console.error('❌ updateProperty - Message:', (error as any).message)
+    console.error('❌ updateProperty - SQL:', (error as any).sql)
     throw error
   }
 }

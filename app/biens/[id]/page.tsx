@@ -1310,14 +1310,14 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
             )}
 
             {/* Calendrier Google - LOCATION SAISONNIÈRE */}
-            {property.type === 'saisonniere' && property.rentalConditions?.googleCalendarUrl && (
+            {property.type === 'saisonniere' && (property as any).googleCalendarUrl && (
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
                   📅 Disponibilités en temps réel
                 </h2>
                 <div className="w-full overflow-hidden rounded-lg border border-gray-200">
                   <iframe
-                    src={property.rentalConditions.googleCalendarUrl}
+                    src={(property as any).googleCalendarUrl}
                     className="w-full h-[600px] border-0"
                     frameBorder="0"
                     scrolling="no"
