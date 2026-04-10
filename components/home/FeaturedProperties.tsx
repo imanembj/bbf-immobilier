@@ -100,6 +100,7 @@ export default function FeaturedProperties() {
           return {
             id: p.id,
             type: p.type === 'location' ? 'annuelle' : p.type,
+            propertyCategory: p.propertyCategory || p.property_category,
             title: p.title,
             location: p.location,
             price: p.price,
