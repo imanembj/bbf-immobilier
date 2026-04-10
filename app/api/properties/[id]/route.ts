@@ -37,10 +37,18 @@ export async function PATCH(
 ) {
   try {
     const updates = await request.json()
+    console.log('🔍 PATCH /api/properties/[id] - ID:', params.id)
+    console.log('🔍 PATCH - rentalConditions reçu:', updates.rentalConditions)
+    console.log('🔍 PATCH - Type de rentalConditions:', typeof updates.rentalConditions)
+    console.log('🔍 PATCH - fees reçu:', updates.fees)
+    console.log('🔍 PATCH - pricingInfo reçu:', updates.pricingInfo)
+    
     await MySQLStore.updateProperty(params.id, updates)
+    
+    console.log('✅ PATCH - Sauvegarde terminée')
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('API Error:', error)
+    console.error('❌ PATCH Error:', error)
     return NextResponse.json({ error: 'Failed to update property' }, { status: 500 })
   }
 }

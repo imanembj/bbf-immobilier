@@ -60,11 +60,12 @@ function convertToCamelCase(obj: any): any {
   if (obj.admin_notes !== undefined) converted.adminNotes = obj.admin_notes
   if (obj.video_url !== undefined) converted.videoUrl = obj.video_url
   if (obj.virtual_tour_url !== undefined) converted.virtualTourUrl = obj.virtual_tour_url
-  if (obj.detailed_description !== undefined) converted.detailedDescription = obj.detailed_description
-  if (obj.rental_conditions !== undefined) converted.rentalConditions = obj.rental_conditions
-  if (obj.purchase_conditions !== undefined) converted.purchaseConditions = obj.purchase_conditions
-  if (obj.legal_info !== undefined) converted.legalInfo = obj.legal_info
-  if (obj.pricing_info !== undefined) converted.pricingInfo = obj.pricing_info
+  if (obj.detailed_description !== undefined) converted.detailedDescription = converted.detailed_description || obj.detailed_description
+  if (obj.rental_conditions !== undefined) converted.rentalConditions = converted.rental_conditions || obj.rental_conditions
+  if (obj.purchase_conditions !== undefined) converted.purchaseConditions = converted.purchase_conditions || obj.purchase_conditions
+  if (obj.legal_info !== undefined) converted.legalInfo = converted.legal_info || obj.legal_info
+  if (obj.pricing_info !== undefined) converted.pricingInfo = converted.pricing_info || obj.pricing_info
+  if (obj.environment !== undefined) converted.environment = converted.environment || obj.environment
   
   // Conversions pour le blog
   if (obj.cover_image !== undefined) converted.coverImage = obj.cover_image

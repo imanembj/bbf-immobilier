@@ -622,6 +622,30 @@ export default function AdminDashboard() {
 
   const handleAddProperty = async (data: PropertyFormData) => {
     try {
+      // Nettoyer pricingInfo selon le type sélectionné
+      let cleanPricingInfo = data.pricingInfo
+      if (cleanPricingInfo) {
+        if (cleanPricingInfo.type === 'simple') {
+          cleanPricingInfo = {
+            type: 'simple',
+            simplePrice: cleanPricingInfo.simplePrice,
+            period: cleanPricingInfo.period
+          }
+        } else if (cleanPricingInfo.type === 'seasonal') {
+          cleanPricingInfo = {
+            type: 'seasonal',
+            seasonalPricing: cleanPricingInfo.seasonalPricing,
+            period: cleanPricingInfo.period
+          }
+        } else if (cleanPricingInfo.type === 'custom') {
+          cleanPricingInfo = {
+            type: 'custom',
+            customPricing: cleanPricingInfo.customPricing,
+            period: cleanPricingInfo.period
+          }
+        }
+      }
+      
       // Convertir PropertyFormData en Property avec TOUTES les données
       const newProperty: any = {
         id: Date.now().toString(),
@@ -631,7 +655,7 @@ export default function AdminDashboard() {
         location: data.location,
         price: data.price,
         period: data.period,
-        pricingInfo: data.pricingInfo, // ✅ AJOUTÉ
+        pricingInfo: cleanPricingInfo,
         description: data.detailedDescription?.presentation || data.description || '',
         images: data.images,
         videoUrl: data.videoUrl,
@@ -673,6 +697,30 @@ export default function AdminDashboard() {
     if (!editingProperty) return
     
     try {
+      // Nettoyer pricingInfo selon le type sélectionné
+      let cleanPricingInfo = data.pricingInfo
+      if (cleanPricingInfo) {
+        if (cleanPricingInfo.type === 'simple') {
+          cleanPricingInfo = {
+            type: 'simple',
+            simplePrice: cleanPricingInfo.simplePrice,
+            period: cleanPricingInfo.period
+          }
+        } else if (cleanPricingInfo.type === 'seasonal') {
+          cleanPricingInfo = {
+            type: 'seasonal',
+            seasonalPricing: cleanPricingInfo.seasonalPricing,
+            period: cleanPricingInfo.period
+          }
+        } else if (cleanPricingInfo.type === 'custom') {
+          cleanPricingInfo = {
+            type: 'custom',
+            customPricing: cleanPricingInfo.customPricing,
+            period: cleanPricingInfo.period
+          }
+        }
+      }
+      
       const updatedProperty: any = {
         title: data.title,
         type: data.type,
@@ -680,7 +728,7 @@ export default function AdminDashboard() {
         location: data.location,
         price: data.price,
         period: data.period,
-        pricingInfo: data.pricingInfo, // ✅ AJOUTÉ
+        pricingInfo: cleanPricingInfo,
         description: data.detailedDescription?.presentation || data.description || '',
         images: data.images,
         videoUrl: data.videoUrl,
@@ -724,9 +772,9 @@ export default function AdminDashboard() {
       location: property.location,
       price: property.price,
       period: property.period,
-      pricingInfo: (property as any).pricingInfo, // ✅ AJOUTÉ
+      pricingInfo: (property as any).pricingInfo,
       description: property.description,
-      images: property.images,
+      images: property.images || [],
       videoUrl: property.videoUrl,
       virtualTourUrl: property.virtualTourUrl,
       rooms: property.rooms,
@@ -734,8 +782,8 @@ export default function AdminDashboard() {
       baths: property.baths,
       area: property.area,
       guests: property.guests,
-      amenities: property.amenities.map((a: any) => typeof a === 'string' ? { icon: '✓', name: a } : a),
-      features: property.features,
+      amenities: (property.amenities || []).map((a: any) => typeof a === 'string' ? { icon: '✓', name: a } : a),
+      features: property.features || [],
       status: property.status,
       featured: property.featured,
       // Charger les données détaillées si elles existent
@@ -750,7 +798,20 @@ export default function AdminDashboard() {
         highlights: [],
       },
       rules: property.rules || [],
-      rentalConditions: property.rentalConditions,
+      rentalConditions: property.rentalConditions || (property.type === 'saisonniere' ? {
+        deposit: 0,
+        cleaningFee: 0,
+        minStay: 1,
+        cancellationPolicy: '',
+        included: [],
+        notIncluded: [],
+      } : {
+        deposit: 0,
+        charges: 0,
+        minLease: 12,
+        availableFrom: new Date().toISOString().split('T')[0],
+        documents: [],
+      }),
       purchaseConditions: property.purchaseConditions,
       fees: property.fees,
       legalInfo: property.legalInfo,
@@ -775,7 +836,7 @@ export default function AdminDashboard() {
       period: property.period,
       pricingInfo: (property as any).pricingInfo,
       description: property.description,
-      images: property.images,
+      images: property.images || [],
       videoUrl: property.videoUrl,
       virtualTourUrl: property.virtualTourUrl,
       rooms: property.rooms,
@@ -783,8 +844,8 @@ export default function AdminDashboard() {
       baths: property.baths,
       area: property.area,
       guests: property.guests,
-      amenities: property.amenities.map((a: any) => typeof a === 'string' ? { icon: '✓', name: a } : a),
-      features: property.features,
+      amenities: (property.amenities || []).map((a: any) => typeof a === 'string' ? { icon: '✓', name: a } : a),
+      features: property.features || [],
       status: property.status,
       featured: false, // Ne pas dupliquer le statut "en vedette"
       detailedDescription: property.detailedDescription || {
@@ -798,7 +859,20 @@ export default function AdminDashboard() {
         highlights: [],
       },
       rules: property.rules || [],
-      rentalConditions: property.rentalConditions,
+      rentalConditions: property.rentalConditions || (property.type === 'saisonniere' ? {
+        deposit: 0,
+        cleaningFee: 0,
+        minStay: 1,
+        cancellationPolicy: '',
+        included: [],
+        notIncluded: [],
+      } : {
+        deposit: 0,
+        charges: 0,
+        minLease: 12,
+        availableFrom: new Date().toISOString().split('T')[0],
+        documents: [],
+      }),
       purchaseConditions: property.purchaseConditions,
       fees: property.fees,
       legalInfo: property.legalInfo,
