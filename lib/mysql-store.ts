@@ -7,6 +7,20 @@ function convertToCamelCase(obj: any): any {
   
   const converted: any = { ...obj }
   
+  // Parser les JSON fields EN PREMIER (avant toute autre conversion)
+  const jsonFields = ['images', 'amenities', 'features', 'rules', 'detailed_description', 'environment', 
+                      'rental_conditions', 'purchase_conditions', 'fees', 'legal_info', 'pricing_info', 'tags', 'links']
+  
+  jsonFields.forEach(field => {
+    if (obj[field] && typeof obj[field] === 'string') {
+      try {
+        converted[field] = JSON.parse(obj[field])
+      } catch {
+        converted[field] = obj[field]
+      }
+    }
+  })
+  
   // Conversions communes
   if (obj.created_at !== undefined) converted.createdAt = obj.created_at
   if (obj.updated_at !== undefined) converted.updatedAt = obj.updated_at
@@ -21,20 +35,6 @@ function convertToCamelCase(obj: any): any {
   if (obj.approved !== undefined && !obj.status) {
     converted.status = obj.approved ? 'approuve' : 'en_attente'
   }
-  
-  // Parser les JSON fields
-  const jsonFields = ['images', 'amenities', 'features', 'rules', 'detailed_description', 'environment', 
-                      'rental_conditions', 'purchase_conditions', 'fees', 'legal_info', 'pricing_info', 'tags', 'links']
-  
-  jsonFields.forEach(field => {
-    if (obj[field] && typeof obj[field] === 'string') {
-      try {
-        converted[field] = JSON.parse(obj[field])
-      } catch {
-        converted[field] = obj[field]
-      }
-    }
-  })
   
   if (obj.property_id !== undefined) converted.propertyId = obj.property_id
   if (obj.property_title !== undefined) converted.propertyTitle = obj.property_title
@@ -60,12 +60,17 @@ function convertToCamelCase(obj: any): any {
   if (obj.admin_notes !== undefined) converted.adminNotes = obj.admin_notes
   if (obj.video_url !== undefined) converted.videoUrl = obj.video_url
   if (obj.virtual_tour_url !== undefined) converted.virtualTourUrl = obj.virtual_tour_url
-  if (obj.detailed_description !== undefined) converted.detailedDescription = converted.detailed_description || obj.detailed_description
-  if (obj.rental_conditions !== undefined) converted.rentalConditions = converted.rental_conditions || obj.rental_conditions
-  if (obj.purchase_conditions !== undefined) converted.purchaseConditions = converted.purchase_conditions || obj.purchase_conditions
-  if (obj.legal_info !== undefined) converted.legalInfo = converted.legal_info || obj.legal_info
-  if (obj.pricing_info !== undefined) converted.pricingInfo = converted.pricing_info || obj.pricing_info
-  if (obj.environment !== undefined) converted.environment = converted.environment || obj.environment
+  // Utiliser les versions PARSÉES (converted.xxx) au lieu des originales (obj.xxx)
+  if (converted.detailed_description !== undefined) converted.detailedDescription = converted.detailed_description
+  if (converted.rental_conditions !== undefined) converted.rentalConditions = converted.rental_conditions
+  if (converted.purchase_conditions !== undefined) converted.purchaseConditions = converted.purchase_conditions
+  if (converted.legal_info !== undefined) converted.legalInfo = converted.legal_info
+  if (converted.pricing_info !== undefined) converted.pricingInfo = converted.pricing_info
+  if (converted.environment !== undefined) converted.environment = converted.environment
+  if (converted.features !== undefined) converted.features = converted.features
+  if (converted.amenities !== undefined) converted.amenities = converted.amenities
+  if (converted.rules !== undefined) converted.rules = converted.rules
+  if (converted.images !== undefined) converted.images = converted.images
   
   // Conversions pour le blog
   if (obj.cover_image !== undefined) converted.coverImage = obj.cover_image
