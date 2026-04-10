@@ -660,6 +660,7 @@ export default function AdminDashboard() {
         images: data.images,
         videoUrl: data.videoUrl,
         virtualTourUrl: data.virtualTourUrl,
+        googleCalendarUrl: (data as any).googleCalendarUrl,
         rooms: data.rooms || 0,
         beds: data.beds,
         baths: data.baths,
@@ -695,6 +696,9 @@ export default function AdminDashboard() {
 
   const handleUpdateProperty = async (data: PropertyFormData) => {
     if (!editingProperty) return
+    
+    console.log('🔍 handleUpdateProperty - data.googleCalendarUrl:', (data as any).googleCalendarUrl)
+    console.log('🔍 handleUpdateProperty - data complet:', data)
     
     try {
       // Nettoyer pricingInfo selon le type sélectionné
@@ -733,6 +737,7 @@ export default function AdminDashboard() {
         images: data.images,
         videoUrl: data.videoUrl,
         virtualTourUrl: data.virtualTourUrl,
+        googleCalendarUrl: (data as any).googleCalendarUrl,
         rooms: data.rooms || 0,
         beds: data.beds,
         baths: data.baths,
