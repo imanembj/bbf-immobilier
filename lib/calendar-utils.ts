@@ -1,3 +1,9 @@
+// Formater une date AAAA-MM-JJ en JJ/MM/AAAA
+function formatDate(dateStr: string): string {
+  const [year, month, day] = dateStr.split('-')
+  return `${day}/${month}/${year}`
+}
+
 // Vérifier si deux périodes se chevauchent
 export function datesOverlap(
   start1: string,
@@ -23,7 +29,7 @@ export function checkAvailability(
   
   for (const event of bookedEvents) {
     if (datesOverlap(checkIn, checkOut, event.start, event.end)) {
-      conflicts.push(`${event.start} au ${event.end}`)
+      conflicts.push(`${formatDate(event.start)} au ${formatDate(event.end)}`)
     }
   }
   

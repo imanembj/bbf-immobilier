@@ -1765,7 +1765,7 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
 
           {/* Booking Sidebar - Desktop uniquement */}
           <div className="hidden lg:block lg:col-span-1">
-            <div className="rounded-xl shadow-lg p-6 sticky top-24 bg-white border-2 max-h-[calc(100vh-7rem)] overflow-y-auto" style={{ borderColor: '#55E0FF' }}>
+            <div className="rounded-xl shadow-lg p-6 sticky top-24 bg-white border-2 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-thin" style={{ borderColor: '#55E0FF' }}>
               <div className="mb-6">
                 <PricingDisplay 
                   pricingInfo={property.pricingInfo}
