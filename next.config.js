@@ -99,7 +99,7 @@ const nextConfig = {
               "img-src 'self' data: https: blob: https://i.ytimg.com https://img.youtube.com",
               "font-src 'self' data: https://fonts.gstatic.com",
               "connect-src 'self' https://www.google-analytics.com https://nxbdpjxasagdtrtntpha.supabase.co https://www.youtube.com https://youtube.com",
-              "frame-src 'self' https://www.facebook.com https://www.instagram.com https://chambre-interdep-guyane-martinique.notaires.fr https://www.google.com https://maps.google.com https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://my.matterport.com https://matterport.com https://kuula.co https://*.kuula.co",
+              "frame-src 'self' https://www.facebook.com https://www.instagram.com https://chambre-interdep-guyane-martinique.notaires.fr https://www.google.com https://maps.google.com https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://my.matterport.com https://matterport.com https://kuula.co https://*.kuula.co https://calendar.google.com",
               "media-src 'self' https://www.youtube.com https://youtube.com https://*.googlevideo.com blob:",
               "child-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com",
             ].join('; ')
