@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { Calendar, Users, Send, User, Mail, Phone } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Calendar, Users, Send, User, Mail, Phone, AlertCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { getCalendarEvents, checkAvailability } from '@/lib/calendar-utils'
 
 interface ReservationFormProps {
   propertyId: string
@@ -95,9 +96,56 @@ export default function ReservationForm({
   })
   const [childrenAges, setChildrenAges] = useState<number[]>([])
   const [includeCleaningFee, setIncludeCleaningFee] = useState(false)
+  const [calendarEvents, setCalendarEvents] = useState<{ start: string; end: string }[]>([])
+  const [availabilityError, setAvailabilityError] = useState<string | null>(null)
+
+  // Charger les événements du calendrier Google si disponible
+  useEffect(() => {
+    const loadCalendarEvents = async () => {
+      if (property?.googleCalendarUrl && property?.type === 'saisonniere') {
+        // Extraire l'ID du calendrier depuis l'URL
+        const match = property.googleCalendarUrl.match(/src=([^&%]+)/)
+        if (match) {
+          const calendarId = match[1].replace('%40', '@').replace('@group.calendar.google.com', '')
+          const events = await getCalendarEvents(calendarId)
+          setCalendarEvents(events)
+        }
+      }
+    }
+    
+    loadCalendarEvents()
+  }, [property])
+
+  // Vérifier la disponibilité quand les dates changent
+  useEffect(() => {
+    if (formData.checkIn && formData.checkOut && calendarEvents.length > 0) {
+      const { available, conflictingDates } = checkAvailability(
+        formData.checkIn,
+        formData.checkOut,
+        calendarEvents
+      )
+      
+      if (!available) {
+        setAvailabilityError(
+          `❌ Ces dates ne sont pas disponibles. Périodes déjà réservées : ${conflictingDates?.join(', ')}`
+        )
+      } else {
+        setAvailabilityError(null)
+      }
+    } else {
+      setAvailabilityError(null)
+    }
+  }, [formData.checkIn, formData.checkOut, calendarEvents])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Vérifier la disponibilité avant de soumettre
+    if (availabilityError) {
+      toast.error('Veuillez sélectionner des dates disponibles')
+      return
+    }
+    
     setLoading(true)
 
     try {
@@ -365,6 +413,17 @@ export default function ReservationForm({
           />
         </div>
       </div>
+
+      {/* Message d'erreur de disponibilité */}
+      {availabilityError && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-red-800">Dates non disponibles</p>
+            <p className="text-sm text-red-700 mt-1">{availabilityError}</p>
+          </div>
+        </div>
+      )}
 
       {/* Option frais de ménage - Afficher uniquement si disponible */}
       {cleaningFeeAmount > 0 && (
