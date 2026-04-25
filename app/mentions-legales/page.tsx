@@ -1,11 +1,27 @@
-import { Shield, FileText, Lock, Scale, Mail, Phone, MapPin } from 'lucide-react'
+'use client'
 
-export const metadata = {
-  title: 'Mentions Légales - BBF Immobilier',
-  description: 'Mentions légales et informations réglementaires de BBF - Bulle Immobilière, Business et Foncier',
-}
+import { useState, useEffect } from 'react'
+import { Shield, FileText, Lock, Scale, Mail, Phone, MapPin } from 'lucide-react'
+import { getAgencyConfig, AgencyConfig } from '@/lib/agency-config'
 
 export default function MentionsLegalesPage() {
+  const [agencyConfig, setAgencyConfig] = useState<AgencyConfig>(getAgencyConfig())
+
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch('/api/settings')
+        if (response.ok) {
+          const settings = await response.json()
+          setAgencyConfig(settings)
+        }
+      } catch (error) {
+        console.error('Error loading agency config:', error)
+      }
+    }
+    loadConfig()
+  }, [])
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -35,18 +51,18 @@ export default function MentionsLegalesPage() {
               </div>
               <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-6 rounded-xl">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">BBF – Bulle immobilière, Business & Foncier</h3>
-                <p className="text-gray-700 mb-2">SAS au capital variable</p>
+                <p className="text-gray-700 mb-2">SAS au capital social variable d'un montant maximum de 5 000 euros</p>
                 <p className="text-gray-700 mb-2">Immatriculée au RCS de Fort-de-France n° 949 886 667</p>
                 <p className="text-gray-700 mb-2">Code NAF : 6831Z – Activités des agences immobilières</p>
                 <p className="text-gray-700 mb-4">Siège social : Quartier Baudelle, 97211 Rivière-Pilote, Martinique</p>
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <Mail className="w-5 h-5" style={{ color: '#41A09C' }} />
-                    <a href="mailto:prestations.touristiques@bbf-immobilier.com" className="text-gray-700 hover:text-cyan-600">prestations.touristiques@bbf-immobilier.com</a>
+                    <a href={`mailto:${agencyConfig?.email || 'contact@bbf-immobilier.com'}`} className="text-gray-700 hover:text-cyan-600">{agencyConfig?.email || 'contact@bbf-immobilier.com'}</a>
                   </div>
                   <div className="flex items-center gap-2">
                     <Phone className="w-5 h-5" style={{ color: '#41A09C' }} />
-                    <span className="text-gray-700">+596 696 00 74 20 / +596 696 02 45 21</span>
+                    <span className="text-gray-700">{agencyConfig?.phone || '+596 696 00 74 20'}</span>
                   </div>
                 </div>
               </div>
@@ -70,10 +86,6 @@ export default function MentionsLegalesPage() {
                     <span className="text-cyan-600 font-bold">🔹</span>
                     <p className="text-gray-700"><strong>Carte G</strong> (Gestion immobilière)</p>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <span className="text-cyan-600 font-bold">🔹</span>
-                    <p className="text-gray-700"><strong>Mention :</strong> Prestations touristiques</p>
-                  </div>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="text-sm text-gray-700 leading-relaxed">
@@ -93,21 +105,34 @@ export default function MentionsLegalesPage() {
               </div>
               <div className="space-y-4">
                 <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-6 rounded-xl">
-                  <div className="flex items-start gap-2 mb-2">
+                  <div className="flex items-start gap-2 mb-3">
                     <span className="text-cyan-600 font-bold">🔹</span>
                     <h3 className="font-bold text-gray-900">Assurance Responsabilité Civile Professionnelle</h3>
                   </div>
-                  <p className="text-gray-700 ml-6">
-                    Souscrite auprès de <strong>MMA IARD</strong>, 14 boulevard Marie et Alexandre Oyon – 72030 Le Mans Cedex 9
-                  </p>
+                  <div className="ml-6 space-y-2">
+                    <p className="text-gray-700">
+                      La société B.B.F BULLE IMMOBILIERE, BUSINESS & FONCIER est assurée en responsabilité civile professionnelle et exploitation auprès de :
+                    </p>
+                    <p className="text-gray-700">
+                      <strong>Markel Insurance SE</strong><br />
+                      93 avenue Charles de Gaulle<br />
+                      92200 Neuilly-sur-Seine<br />
+                      N° SIREN : 852 780 576<br />
+                      Représenté par Vanessa TOLEDANO, représentant légal en France
+                    </p>
+                    <p className="text-gray-700">
+                      <strong>Contrat n° RK0002598</strong><br />
+                      Valable du 01/01/2026 au 31/12/2026
+                    </p>
+                  </div>
                 </div>
                 <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-6 rounded-xl">
-                  <div className="flex items-start gap-2 mb-2">
+                  <div className="flex items-start gap-2 mb-3">
                     <span className="text-cyan-600 font-bold">🔹</span>
                     <h3 className="font-bold text-gray-900">Garantie Financière</h3>
                   </div>
                   <p className="text-gray-700 ml-6">
-                    Assurée par <strong>MMA IARD</strong>, pour un montant de <strong>40 000 €</strong> - Sans perception de fonds
+                    La société bénéficie d'une garantie financière d'un montant de <strong>110 000 €</strong> par période d'assurance, sans franchise.
                   </p>
                 </div>
               </div>
@@ -158,19 +183,20 @@ export default function MentionsLegalesPage() {
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#55E0FF' }}>
                   <Scale className="w-6 h-6 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Réclamations – Médiation</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Médiation de la consommation</h2>
               </div>
               <div className="bg-white border-2 border-gray-200 p-6 rounded-xl">
-                <p className="text-gray-700 mb-4">En cas de litige ou réclamation, nous nous engageons à :</p>
-                <ul className="list-disc list-inside space-y-2 mb-6 text-gray-700">
-                  <li>Accuser réception sous <strong>10 jours ouvrés</strong></li>
-                  <li>Fournir une réponse sous <strong>60 jours</strong></li>
-                </ul>
+                <p className="text-gray-700 mb-4">
+                  Conformément aux dispositions des articles L.611-1 et suivants du Code de la consommation, le client est informé qu'il peut recourir gratuitement à un médiateur de la consommation en vue de la résolution amiable d'un litige.
+                </p>
+                <p className="text-gray-700 mb-4">
+                  En cas de litige non résolu après une réclamation préalable écrite auprès du professionnel, le client peut saisir le médiateur suivant :
+                </p>
                 <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-4 rounded-lg">
-                  <p className="text-gray-700 mb-2">Si aucun accord n'est trouvé, vous pouvez contacter :</p>
-                  <p className="font-bold text-gray-900">CNPM – Médiation – Consommation</p>
-                  <p className="text-gray-700">27 Avenue de la Libération – 42400 SAINT-CHAMOND</p>
-                  <p className="text-gray-700 mt-2">🖥 <a href="https://www.cnpm-mediation.org" target="_blank" rel="noopener noreferrer" className="text-cyan-600 hover:underline">www.cnpm-mediation.org</a></p>
+                  <p className="font-bold text-gray-900 mb-2">MEDIMMOCONSO</p>
+                  <p className="text-gray-700">1 Allée du Parc de Mesemena – Bât A – CS 25222</p>
+                  <p className="text-gray-700 mb-3">44505 LA BAULE CEDEX</p>
+                  <p className="text-gray-700">Site internet : <a href="https://www.medimmoconso.fr" target="_blank" rel="noopener noreferrer" className="text-cyan-600 hover:underline font-semibold">www.medimmoconso.fr</a></p>
                 </div>
               </div>
             </div>

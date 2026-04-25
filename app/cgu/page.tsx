@@ -1,11 +1,27 @@
-import { FileText, AlertCircle, Scale, Shield, UserCheck, CheckCircle } from 'lucide-react'
+'use client'
 
-export const metadata = {
-  title: 'Conditions Générales d\'Utilisation - BBF Immobilier',
-  description: 'Conditions générales d\'utilisation du site BBF - Bulle Immobilière',
-}
+import { useState, useEffect } from 'react'
+import { FileText, AlertCircle, Scale, Shield, UserCheck, CheckCircle } from 'lucide-react'
+import { getAgencyConfig, AgencyConfig } from '@/lib/agency-config'
 
 export default function CGUPage() {
+  const [agencyConfig, setAgencyConfig] = useState<AgencyConfig>(getAgencyConfig())
+
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch('/api/settings')
+        if (response.ok) {
+          const settings = await response.json()
+          setAgencyConfig(settings)
+        }
+      } catch (error) {
+        console.error('Error loading agency config:', error)
+      }
+    }
+    loadConfig()
+  }, [])
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -225,8 +241,8 @@ export default function CGUPage() {
             <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-6 rounded-xl">
               <h3 className="font-bold text-gray-900 mb-3">Contact</h3>
               <p className="text-gray-700 mb-3">Pour toute question concernant ces CGU, contactez-nous :</p>
-              <p className="text-gray-700">📧 <strong>contact@bbf-immobilier.com</strong></p>
-              <p className="text-gray-700">📞 <strong>+596 596 00 74 20</strong></p>
+              <p className="text-gray-700">📧 <strong>{agencyConfig?.email || 'contact@bbf-immobilier.com'}</strong></p>
+              <p className="text-gray-700">📞 <strong>{agencyConfig?.phone || '+596 596 00 74 20'}</strong></p>
               <p className="text-gray-700 mt-2">BBF – Bulle Immobilière, Business et Foncier</p>
               <p className="text-gray-700">Quartier Baudelle – 97211 RIVIÈRE-PILOTE</p>
             </div>

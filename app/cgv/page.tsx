@@ -1,11 +1,27 @@
-import { ShoppingCart, FileText, CreditCard, Truck, RotateCcw, Shield, AlertTriangle, Scale } from 'lucide-react'
+'use client'
 
-export const metadata = {
-  title: 'Conditions Générales de Vente - BBF Immobilier',
-  description: 'Conditions générales de vente des prestations BBF - Bulle Immobilière',
-}
+import { useState, useEffect } from 'react'
+import { ShoppingCart, FileText, CreditCard, Truck, RotateCcw, Shield, AlertTriangle, Scale } from 'lucide-react'
+import { getAgencyConfig, AgencyConfig } from '@/lib/agency-config'
 
 export default function CGVPage() {
+  const [agencyConfig, setAgencyConfig] = useState<AgencyConfig>(getAgencyConfig())
+
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch('/api/settings')
+        if (response.ok) {
+          const settings = await response.json()
+          setAgencyConfig(settings)
+        }
+      } catch (error) {
+        console.error('Error loading agency config:', error)
+      }
+    }
+    loadConfig()
+  }, [])
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -56,7 +72,7 @@ export default function CGVPage() {
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-cyan-600 font-bold mt-1">•</span>
-                      <span>Gestion locative (annuelle et touristique)</span>
+                      <span>Gestion locative (annuelle et saisonnière)</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-cyan-600 font-bold mt-1">•</span>
@@ -275,7 +291,7 @@ export default function CGVPage() {
                 <p className="text-gray-700 mb-4">Toute réclamation doit être adressée par écrit à :</p>
                 <p className="text-gray-700 mb-2"><strong>BBF – Bulle Immobilière, Business et Foncier</strong></p>
                 <p className="text-gray-700 mb-2">Quartier Baudelle – 97211 RIVIÈRE-PILOTE</p>
-                <p className="text-gray-700 mb-4">📧 contact@bbf-immobilier.com</p>
+                <p className="text-gray-700 mb-4">📧 {agencyConfig?.email || 'contact@bbf-immobilier.com'}</p>
                 <p className="text-gray-700 mb-2">Délais de réponse :</p>
                 <ul className="list-disc list-inside space-y-2 text-gray-700">
                   <li>Accusé de réception : 10 jours ouvrés</li>
@@ -290,13 +306,19 @@ export default function CGVPage() {
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#55E0FF' }}>
                   <Scale className="w-6 h-6 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Médiation</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Médiation de la consommation</h2>
               </div>
               <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-6 rounded-xl">
-                <p className="text-gray-700 mb-3">En cas de litige non résolu à l'amiable, vous pouvez recourir gratuitement à un médiateur de la consommation :</p>
-                <p className="font-bold text-gray-900">CNPM – Médiation – Consommation</p>
-                <p className="text-gray-700">27 Avenue de la Libération – 42400 SAINT-CHAMOND</p>
-                <p className="text-gray-700 mt-2">🖥 <a href="https://www.cnpm-mediation.org" target="_blank" rel="noopener noreferrer" className="text-cyan-600 hover:underline">www.cnpm-mediation.org</a></p>
+                <p className="text-gray-700 mb-3">
+                  Conformément aux dispositions des articles L.611-1 et suivants du Code de la consommation, le client est informé qu'il peut recourir gratuitement à un médiateur de la consommation en vue de la résolution amiable d'un litige.
+                </p>
+                <p className="text-gray-700 mb-3">
+                  En cas de litige non résolu après une réclamation préalable écrite auprès du professionnel, le client peut saisir le médiateur suivant :
+                </p>
+                <p className="font-bold text-gray-900">MEDIMMOCONSO</p>
+                <p className="text-gray-700">1 Allée du Parc de Mesemena – Bât A – CS 25222</p>
+                <p className="text-gray-700 mb-2">44505 LA BAULE CEDEX</p>
+                <p className="text-gray-700">Site internet : <a href="https://www.medimmoconso.fr" target="_blank" rel="noopener noreferrer" className="text-cyan-600 hover:underline font-semibold">www.medimmoconso.fr</a></p>
               </div>
             </div>
 
@@ -317,8 +339,8 @@ export default function CGVPage() {
             <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-6 rounded-xl">
               <h3 className="font-bold text-gray-900 mb-3">Contact</h3>
               <p className="text-gray-700 mb-3">Pour toute question concernant ces CGV :</p>
-              <p className="text-gray-700">📧 <strong>contact@bbf-immobilier.com</strong></p>
-              <p className="text-gray-700">📞 <strong>+596 596 00 74 20</strong></p>
+              <p className="text-gray-700">📧 <strong>{agencyConfig?.email || 'contact@bbf-immobilier.com'}</strong></p>
+              <p className="text-gray-700">📞 <strong>{agencyConfig?.phone || '+596 596 00 74 20'}</strong></p>
             </div>
 
             {/* Date */}

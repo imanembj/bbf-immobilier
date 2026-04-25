@@ -1,11 +1,27 @@
-import { Lock, Shield, Eye, Database, UserCheck, FileText } from 'lucide-react'
+'use client'
 
-export const metadata = {
-  title: 'Politique de Confidentialité - BBF Immobilier',
-  description: 'Politique de confidentialité et protection des données personnelles de BBF - Bulle Immobilière',
-}
+import { useState, useEffect } from 'react'
+import { Lock, Shield, Eye, Database, UserCheck, FileText } from 'lucide-react'
+import { getAgencyConfig, AgencyConfig } from '@/lib/agency-config'
 
 export default function PolitiqueConfidentialitePage() {
+  const [agencyConfig, setAgencyConfig] = useState<AgencyConfig>(getAgencyConfig())
+
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const response = await fetch('/api/settings')
+        if (response.ok) {
+          const settings = await response.json()
+          setAgencyConfig(settings)
+        }
+      } catch (error) {
+        console.error('Error loading agency config:', error)
+      }
+    }
+    loadConfig()
+  }, [])
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -45,8 +61,8 @@ export default function PolitiqueConfidentialitePage() {
               <div className="bg-white border-2 border-gray-200 p-6 rounded-xl">
                 <p className="text-gray-700 mb-2"><strong>BBF – Bulle Immobilière, Business et Foncier</strong></p>
                 <p className="text-gray-700 mb-2">Siège social : Quartier Baudelle – 97211 RIVIÈRE-PILOTE</p>
-                <p className="text-gray-700 mb-2">Email : contact@bbf-immobilier.com</p>
-                <p className="text-gray-700">Téléphone : +596 596 00 74 20</p>
+                <p className="text-gray-700 mb-2">Email : {agencyConfig?.email || 'contact@bbf-immobilier.com'}</p>
+                <p className="text-gray-700">Téléphone : {agencyConfig?.phone || '+596 596 00 74 20'}</p>
               </div>
             </div>
 
@@ -172,7 +188,7 @@ export default function PolitiqueConfidentialitePage() {
                 </ul>
                 <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-4 rounded-lg">
                   <p className="font-semibold text-gray-900 mb-2">Pour exercer vos droits :</p>
-                  <p className="text-gray-700">Envoyez un email à <strong>contact@bbf-immobilier.com</strong></p>
+                  <p className="text-gray-700">Envoyez un email à <strong>{agencyConfig?.email || 'contact@bbf-immobilier.com'}</strong></p>
                   <p className="text-gray-700 mt-2">Ou écrivez à : BBF, Quartier Baudelle – 97211 RIVIÈRE-PILOTE</p>
                   <p className="text-sm text-gray-600 mt-3">Nous vous répondrons dans un délai de 30 jours maximum.</p>
                 </div>
@@ -219,7 +235,7 @@ export default function PolitiqueConfidentialitePage() {
             <div className="bg-gradient-to-br from-cyan-50 to-teal-50 p-6 rounded-xl">
               <h3 className="font-bold text-gray-900 mb-3">Questions ou réclamations</h3>
               <p className="text-gray-700 mb-3">Pour toute question concernant cette politique de confidentialité ou pour exercer vos droits, contactez-nous :</p>
-              <p className="text-gray-700">📧 <strong>contact@bbf-immobilier.com</strong></p>
+              <p className="text-gray-700">📧 <strong>{agencyConfig?.email || 'contact@bbf-immobilier.com'}</strong></p>
               <p className="text-gray-700 mt-2">Vous avez également le droit de déposer une plainte auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés).</p>
             </div>
 
