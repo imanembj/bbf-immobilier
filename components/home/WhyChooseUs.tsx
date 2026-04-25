@@ -7,6 +7,16 @@ import Image from 'next/image'
 export default function WhyChooseUs() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [hasAutoSlid, setHasAutoSlid] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const reasons = [
     {
@@ -98,13 +108,17 @@ export default function WhyChooseUs() {
           {/* Slides Container */}
           <div className="overflow-hidden mb-6">
             <div 
-              className="flex gap-6 transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(calc(50% - 17.5vw - 12px + -${currentSlide * 37}%))` }}
+              className="flex gap-4 md:gap-6 transition-transform duration-500 ease-out"
+              style={{ 
+                transform: isMobile
+                  ? `translateX(calc(-${currentSlide * 100}% - ${currentSlide * 16}px))` 
+                  : `translateX(calc(50% - 17.5vw - 12px + -${currentSlide * 37}%))`
+              }}
             >
               {reasons.map((reason, index) => (
                 <div 
                   key={index} 
-                  className="w-[35vw] flex-shrink-0 cursor-pointer"
+                  className="w-[85vw] md:w-[35vw] flex-shrink-0 cursor-pointer"
                   onClick={() => setCurrentSlide(index)}
                 >
                   <div className="relative h-[380px] rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all duration-300">

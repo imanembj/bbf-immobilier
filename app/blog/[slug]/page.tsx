@@ -222,34 +222,34 @@ export default function BlogPostPage() {
             {/* Share */}
             <div className="mt-12 pt-8 border-t">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Partager cet article</h3>
-              <div className="flex gap-3">
+              <div className="grid grid-cols-2 sm:flex gap-3">
                 <button
                   onClick={() => handleShare('facebook')}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
                 >
-                  <Facebook className="w-4 h-4" />
-                  Facebook
+                  <Facebook className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">Facebook</span>
                 </button>
                 <button
                   onClick={() => handleShare('twitter')}
-                  className="flex items-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors text-sm sm:text-base"
                 >
-                  <Twitter className="w-4 h-4" />
-                  Twitter
+                  <Twitter className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">Twitter</span>
                 </button>
                 <button
                   onClick={() => handleShare('linkedin')}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors text-sm sm:text-base"
                 >
-                  <Linkedin className="w-4 h-4" />
-                  LinkedIn
+                  <Linkedin className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">LinkedIn</span>
                 </button>
                 <button
                   onClick={() => handleShare('copy')}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
                 >
-                  <Share2 className="w-4 h-4" />
-                  Copier le lien
+                  <Share2 className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">Copier</span>
                 </button>
               </div>
             </div>
