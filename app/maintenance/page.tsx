@@ -32,10 +32,13 @@ export default function MaintenancePage() {
               Pour toute urgence, veuillez nous contacter directement :
             </p>
             <p className="text-blue-600 font-semibold mt-2">
-              📧 contact@bulleimmobiliere.com
+              📧 assist.bbf@gmail.com
             </p>
             <p className="text-blue-600 font-semibold mt-1">
-              📱 +212 XXX XXX XXX
+              📱 +596 696 00 74 20
+            </p>
+            <p className="text-blue-600 font-semibold mt-1">
+              📱 +596 696 02 45 21
             </p>
           </div>
         </div>
