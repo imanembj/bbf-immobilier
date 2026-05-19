@@ -4,6 +4,7 @@
  */
 
 import { queryOne } from './db'
+import bcrypt from 'bcryptjs'
 
 export interface AdminUser {
   id: string
@@ -17,21 +18,17 @@ export interface AdminUser {
 }
 
 /**
- * Hash simple du mot de passe (à remplacer par bcrypt en production)
- * Pour l'instant, on stocke en clair pour le développement
+ * Hash sécurisé du mot de passe avec bcrypt
  */
-function simpleHash(password: string): string {
-  // MODE DÉVELOPPEMENT : Stockage en clair
-  // TODO: En production, utilisez bcrypt ou argon2
-  return password
+async function hashPassword(password: string): Promise<string> {
+  return await bcrypt.hash(password, 10)
 }
 
 /**
  * Vérifier si un mot de passe correspond au hash
  */
-function verifyPassword(password: string, hash: string): boolean {
-  // MODE DÉVELOPPEMENT : Comparaison directe
-  return password === hash
+async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  return await bcrypt.compare(password, hash)
 }
 
 /**
@@ -55,11 +52,10 @@ export async function loginAdmin(email: string, password: string): Promise<{ suc
     }
 
     console.log('🔑 Vérification du mot de passe...')
-    console.log('Mot de passe saisi:', password)
-    console.log('Hash en base:', data.password_hash)
     
     // Vérifier le mot de passe
-    if (!verifyPassword(password, data.password_hash)) {
+    const isValid = await verifyPassword(password, data.password_hash)
+    if (!isValid) {
       console.log('❌ Mot de passe incorrect')
       return { success: false, error: 'Email ou mot de passe incorrect' }
     }
@@ -107,14 +103,16 @@ export async function changePassword(userId: string, currentPassword: string, ne
     }
 
     // Vérifier l'ancien mot de passe
-    if (!verifyPassword(currentPassword, data.password_hash)) {
+    const isValid = await verifyPassword(currentPassword, data.password_hash)
+    if (!isValid) {
       return { success: false, error: 'Mot de passe actuel incorrect' }
     }
 
     // Mettre à jour avec le nouveau mot de passe
+    const hashedPassword = await hashPassword(newPassword)
     await queryOne(
       'UPDATE admin_users SET password_hash = ? WHERE id = ?',
-      [simpleHash(newPassword), userId]
+      [hashedPassword, userId]
     )
 
     return { success: true }
@@ -158,9 +156,10 @@ export async function changeEmail(userId: string, newEmail: string): Promise<{ s
 export async function createAdminUser(email: string, password: string, name?: string): Promise<{ success: boolean; user?: AdminUser; error?: string }> {
   try {
     const id = Date.now().toString()
+    const hashedPassword = await hashPassword(password)
     await queryOne(
       'INSERT INTO admin_users (id, email, password_hash, name, role, active) VALUES (?, ?, ?, ?, ?, ?)',
-      [id, email, simpleHash(password), name || '', 'admin', true]
+      [id, email, hashedPassword, name || '', 'admin', true]
     )
 
     const data = await queryOne<any>(

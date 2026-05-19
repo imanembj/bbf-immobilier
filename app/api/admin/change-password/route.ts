@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     const user = users[0]
 
     // Vérifier le mot de passe actuel
-    const isValid = await bcrypt.compare(currentPassword, user.password)
+    const isValid = await bcrypt.compare(currentPassword, user.password_hash)
     if (!isValid) {
       return NextResponse.json(
         { success: false, error: 'Mot de passe actuel incorrect' },
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     // Mettre à jour le mot de passe
     await update('admin_users', {
-      password: hashedPassword,
+      password_hash: hashedPassword,
       updated_at: new Date().toISOString(),
     }, 'id = ?', [userId])
 
