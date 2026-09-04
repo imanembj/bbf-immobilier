@@ -653,14 +653,20 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
                     setShowLightbox(true)
                   }}
                 >
-                  <Image
-                    src={property.images[selectedImage]}
-                    alt={property.title}
-                    fill
-                    quality={95}
-                    priority
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
+                  {property.images[selectedImage] && property.images[selectedImage] !== '...' && property.images[selectedImage].startsWith && (property.images[selectedImage].startsWith('http') || property.images[selectedImage].startsWith('/')) ? (
+                    <Image
+                      src={property.images[selectedImage]}
+                      alt={property.title}
+                      fill
+                      quality={95}
+                      priority
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-400">Image non disponible</span>
+                    </div>
+                  )}
                   {/* Badge compteur d'images */}
                   <div className="absolute top-4 right-4 bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
                     <span className="font-semibold">{selectedImage + 1} / {property.images.length}</span>
@@ -772,26 +778,28 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
           <div className="grid grid-cols-5 gap-2 md:gap-3">
             {/* Miniatures des photos (max 3 si vidéo/visite présents) */}
             {property.images.slice(0, property.videoUrl || property.virtualTourUrl ? 3 : 5).map((image: string, index: number) => (
-              <div
-                key={`photo-${index}`}
-                className={`relative h-20 md:h-28 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
-                  activeMediaTab === 'photos' && selectedImage === index 
-                    ? 'ring-4 ring-primary-500 scale-95' 
-                    : 'hover:ring-2 hover:ring-primary-300 hover:scale-105'
-                }`}
-                onClick={() => {
-                  setActiveMediaTab('photos')
-                  setSelectedImage(index)
-                }}
-              >
-                <Image
-                  src={image}
-                  alt={`${property.title} ${index + 1}`}
-                  fill
-                  quality={90}
-                  className="object-cover"
-                />
-              </div>
+              image && image !== '...' && image.startsWith && (image.startsWith('http') || image.startsWith('/')) ? (
+                <div
+                  key={`photo-${index}`}
+                  className={`relative h-20 md:h-28 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 ${
+                    activeMediaTab === 'photos' && selectedImage === index 
+                      ? 'ring-4 ring-primary-500 scale-95' 
+                      : 'hover:ring-2 hover:ring-primary-300 hover:scale-105'
+                  }`}
+                  onClick={() => {
+                    setActiveMediaTab('photos')
+                    setSelectedImage(index)
+                  }}
+                >
+                  <Image
+                    src={image}
+                    alt={`${property.title} ${index + 1}`}
+                    fill
+                    quality={90}
+                    className="object-cover"
+                  />
+                </div>
+              ) : null
             ))}
             
             {/* Miniature Vidéo */}
@@ -2047,14 +2055,20 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
             {/* Contenu principal */}
             <div className="relative w-full h-full max-w-7xl max-h-[90vh] mx-auto px-20">
               {!isVideo && !isVirtual ? (
-                <Image
-                  src={property.images[lightboxIndex]}
-                  alt={`${property.title} ${lightboxIndex + 1}`}
-                  fill
-                  quality={100}
-                  priority
-                  className="object-contain"
-                />
+                property.images[lightboxIndex] && property.images[lightboxIndex] !== '...' && property.images[lightboxIndex].startsWith && (property.images[lightboxIndex].startsWith('http') || property.images[lightboxIndex].startsWith('/')) ? (
+                  <Image
+                    src={property.images[lightboxIndex]}
+                    alt={`${property.title} ${lightboxIndex + 1}`}
+                    fill
+                    quality={100}
+                    priority
+                    className="object-contain"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                    <span className="text-white">Image non disponible</span>
+                  </div>
+                )
               ) : isVideo ? (
                 <div className="relative w-full h-full">
                   <iframe
@@ -2091,22 +2105,24 @@ export default function BienDetailPage({ params }: { params: { id: string } }) {
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 max-w-7xl w-full px-4 z-10">
               <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide justify-center">
                 {property.images.map((image: string, index: number) => (
-                  <div
-                    key={`thumb-${index}`}
-                    className={`relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden cursor-pointer transition-all ${
-                      lightboxIndex === index 
-                        ? 'ring-4 ring-primary-500 scale-110' 
-                        : 'opacity-60 hover:opacity-100'
-                    }`}
-                    onClick={() => setLightboxIndex(index)}
-                  >
-                    <Image
-                      src={image}
-                      alt={`Miniature ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+                  image && image !== '...' && image.startsWith && (image.startsWith('http') || image.startsWith('/')) ? (
+                    <div
+                      key={`thumb-${index}`}
+                      className={`relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden cursor-pointer transition-all ${
+                        lightboxIndex === index 
+                          ? 'ring-4 ring-primary-500 scale-110' 
+                          : 'opacity-60 hover:opacity-100'
+                      }`}
+                      onClick={() => setLightboxIndex(index)}
+                    >
+                      <Image
+                        src={image}
+                        alt={`Miniature ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : null
                 ))}
                 
                 {/* Miniature vidéo */}

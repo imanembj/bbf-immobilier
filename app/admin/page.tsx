@@ -770,12 +770,16 @@ export default function AdminDashboard() {
   }
 
   const handleEditProperty = (property: Property) => {
+    console.log('🔍 handleEditProperty - property complet:', property)
+    console.log('🔍 handleEditProperty - property.price:', property.price)
+    console.log('🔍 handleEditProperty - property.pricingInfo:', (property as any).pricingInfo)
+    
     // Convertir Property en PropertyFormData pour le formulaire
     const formData: Partial<PropertyFormData> = {
       type: property.type as any,
       title: property.title,
       location: property.location,
-      price: property.price,
+      price: typeof property.price === 'string' ? parseFloat(property.price) : property.price,
       period: property.period,
       pricingInfo: (property as any).pricingInfo,
       description: property.description,

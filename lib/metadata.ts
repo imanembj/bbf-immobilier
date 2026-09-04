@@ -11,7 +11,7 @@ interface PageMetadata {
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://bbf-immobilier.com'
 const siteName = 'BBF Immobilier - Bulle Immobilière Business & Foncier Martinique'
-const defaultImage = `${baseUrl}/og-image.jpg`
+const defaultImage = `${baseUrl}/orythys-martinique-205112_1920.jpg`
 
 export function generateMetadata({
   title,

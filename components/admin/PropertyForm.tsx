@@ -432,11 +432,13 @@ export default function PropertyForm({ onSubmit, onCancel, initialData }: Proper
                   </label>
                   <input
                     type="number"
-                    value={formData.pricingInfo?.simplePrice || ''}
+                    value={formData.pricingInfo?.simplePrice || formData.price || ''}
                     onChange={(e) => {
                       const price = parseFloat(e.target.value)
+                      console.log('🔍 Changement prix simple:', price)
                       updateNestedField('pricingInfo', 'simplePrice', price)
                       updateField('price', price) // Sync avec le prix principal
+                      console.log('🔍 formData.price après sync:', formData.price)
                     }}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                     placeholder="Ex: 350"

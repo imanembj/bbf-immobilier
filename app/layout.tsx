@@ -20,7 +20,13 @@ const inter = Inter({
   fallback: ['system-ui', 'arial']
 })
 
-export const metadata: Metadata = defaultMetadata
+export const metadata: Metadata = {
+  ...defaultMetadata,
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
+}
 
 export default function RootLayout({
   children,
